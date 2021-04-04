@@ -1,0 +1,224 @@
+import Ajax from 'core/ajax';
+import config from 'core/config';
+import Fragment from 'core/fragment';
+import ModalEvents from 'core/modal_events';
+import ModalFactory from 'core/modal_factory';
+import notification from 'core/notification';
+import templates from 'core/templates';
+import loadChapter from 'format_popups/book';
+import resize from 'format_popups/embed';
+
+/**
+ * Initialize modal and listeners
+ *
+ * @param int Course context id
+ * @param int displaysection Single section to display
+ */
+export const init = (contextid, courseid, displaysection) => {
+    'use strict';
+
+    ModalFactory.create({
+        large: true,
+        title: 'title',
+        body: '<div id="format_popups_activity_content"></div>'
+    }).then(function (modal) {
+        modal.contextid = contextid;
+        modal.courseid = courseid;
+        modal.displaysection = displaysection;
+        modal.modules = [];
+        registerListeners.bind(modal)();
+
+        Ajax.call([{
+            methodname: 'format_popups_get_available_mods',
+            args: {
+                contextid: modal.contextid
+            },
+            done: function(modules) {
+                this.modules = modules;
+            }.bind(modal),
+            fail: notification.exception
+        }]);
+    });
+};
+
+/**
+ * Update activities on course page and optionally manual completion
+ */
+function updatePage() {
+    'use strict';
+
+    Fragment.loadFragment(
+        'format_popups',
+        'page',
+        this.contextid,
+        {
+            displaysection: this.displaysection
+        }
+    ).then(function(html, js) {
+        templates.replaceNodeContents('div.course-content', html, js);
+        document.querySelectorAll('form#sectionmenu select').forEach(function(selector) {
+            let form = selector.closest('form'),
+                html;
+            selector.removeAttribute('id');
+            html = form.innerHTML;
+            templates.replaceNodeContents(form, html, '');
+        });
+    }).fail(notification.exception);
+
+    Ajax.call([{
+        methodname: 'format_popups_get_available_mods',
+        args: {
+            contextid: this.contextid
+        },
+        done: function(modules) {
+            this.modules = modules;
+        }.bind(this),
+        fail: notification.exception
+    }]);
+}
+
+/**
+ * Register listeners for modal
+ *
+ */
+function registerListeners() {
+    'use strict';
+
+    // Open Modal when view is clicked.
+    document.querySelector('body').addEventListener('click', function(e) {
+        let anchor = e.target.closest('a');
+        if (anchor && anchor.getAttribute('href')
+            && anchor.closest('div.course-content, #format_popups_activity_content')
+        ) {
+            let url = new URL(anchor.getAttribute('href')),
+                id = url.searchParams.get('id');
+            this.modules.forEach(function(module) {
+                if ((id == module.id &&
+                        !url.searchParams.get('downloadown') &&
+                        config.wwwroot + '/mod/' + module.modname + '/view.php' === url.origin + url.pathname) ||
+                    (url.searchParams.get('a') == module.instance &&
+                        config.wwwroot + '/mod/' + module.modname + '/report.php' === url.origin + url.pathname
+                            && module.modname === 'h5pactivity')
+                ) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.setTitle(module.title);
+                        templates.replaceNodeContents(
+                            '#format_popups_activity_content',
+                            '<div style="height: 275px;"></div>',
+                            ''
+                        );
+                        Fragment.loadFragment(
+                            'format_popups',
+                            'mod',
+                            module.contextid,
+                            {
+                                jsondata: JSON.stringify(url.searchParams.toString()),
+                                modname: module.modname,
+                                path: url.pathname
+                            }
+                        ).then(
+                            templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
+                        ).fail(notification.exception);
+                        this.show();
+                }
+            }.bind(this));
+        }
+    }.bind(this));
+
+    // Update the page so new completion and conditions show.
+    this.getRoot().on(ModalEvents.hidden, updatePage.bind(this));
+
+    // Listen for manual completion update.
+    document.querySelector('div.course-content').addEventListener('submit', handleCompletion.bind(this));
+
+    // Remove module listener.
+    this.getRoot().on(ModalEvents.hidden, function() {
+        let content = document.querySelector('#format_popups_activity_content');
+        if (content) {
+            content.removeEventListener('click', loadChapter);
+            content.removeEventListener('resize', resize);
+        }
+    }.bind(window));
+
+    // Navigation links within the course page.
+    document.querySelectorAll('#page-navbar, div.course-content').forEach(function(container) {
+        container.addEventListener('click', function (e) {
+            let anchor = e.target.closest('a') || e.target;
+            if (anchor && anchor.getAttribute('href')) {
+                let href = anchor.getAttribute('href');
+                if (href.search(config.wwwroot + '/course/view.php') === 0) {
+                    let url = new URL(href),
+                        params = url.searchParams;
+                    if (params.get('id') === this.courseid) {
+                        this.displaysection = params.get('section');
+                        updatePage.bind(this)();
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }
+            }
+        }.bind(this));
+    }.bind(this));
+
+    // Handle form navigation on the course page.
+    document.querySelector('div.course-content').addEventListener('change', function(e) {
+        let form = e.target.closest('form#sectionmenu');
+        if (form) {
+            let formdata = new FormData(form),
+                url = new URL(config.wwwroot + formdata.get('jump')),
+                params = url.searchParams;
+            if (params.get('id') === this.courseid) {
+                this.displaysection = params.get('section');
+                updatePage.bind(this)();
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+    }.bind(this));
+
+    // Remove original form listeners.
+    document.querySelectorAll('form#sectionmenu select, form.togglecompletion').forEach(function(selector) {
+        let form = selector.closest('form'),
+            html;
+        selector.removeAttribute('id');
+        html = form.innerHTML;
+        templates.replaceNodeContents(form, html, '');
+    });
+}
+
+/**
+ * Submit form and load response
+ *
+ * @param object event
+ */
+function handleCompletion(e) {
+    'use strict';
+    let form = e.target.closest('form.togglecompletion');
+    if (form) {
+        let formdata = new FormData(form),
+            url = new URL(form.getAttribute('action')),
+            params = new URLSearchParams(formdata);
+
+        if (config.wwwroot + '/course/togglecompletion.php' === url.origin + url.pathname) {
+            let xhttp = new XMLHttpRequest(),
+                spinner = document.createElement('div');
+            e.preventDefault();
+            e.stopPropagation();
+            params.append('fromajax', 1);
+            spinner.setAttribute('class', 'ajaxworking');
+            form.appendChild(spinner);
+
+            // This is not the fasted. but best code reuse.  First complete ajax request
+            // for completion update ignoring result, then reload the page.
+            xhttp.onreadystatechange = function(modal) {
+                if (this.readyState == 4 && this.status == 200) {
+                    updatePage.bind(modal)();
+                }
+            }.bind(xhttp, this);
+            xhttp.open('POST', form.getAttribute('action'), true);
+            xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhttp.send(params.toString());
+        }
+    }
+}
