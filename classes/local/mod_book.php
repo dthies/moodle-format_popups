@@ -67,20 +67,6 @@ class mod_book extends mod_page {
         $allowedit  = has_capability('mod/book:edit', $context);
         $viewhidden = has_capability('mod/book:viewhiddenchapters', $context);
 
-        if ($allowedit) {
-            if ($edit != -1 and confirm_sesskey()) {
-                $USER->editing = $edit;
-            } else {
-                if (isset($USER->editing)) {
-                    $edit = $USER->editing;
-                } else {
-                    $edit = 0;
-                }
-            }
-        } else {
-            $edit = 0;
-        }
-
         // Read chapters.
         $chapters = book_preload_chapters($book);
 
@@ -93,7 +79,7 @@ class mod_book extends mod_page {
             book_view($book, null, false, $course, $cm, $context);
 
             foreach ($chapters as $ch) {
-                if ($edit || ($ch->hidden && $viewhidden)) {
+                if ($ch->hidden && $viewhidden) {
                     $chapterid = $ch->id;
                     break;
                 }
@@ -128,7 +114,7 @@ class mod_book extends mod_page {
         $navnexttitle = null;
         $last = null;
         foreach ($chapters as $ch) {
-            if (!$edit and ($ch->hidden && !$viewhidden)) {
+            if ($ch->hidden && !$viewhidden) {
                 continue;
             }
             if ($last == $chapter->id) {
@@ -199,7 +185,7 @@ class mod_book extends mod_page {
 
         // Book display HTML code.
 
-        if ($toc = book_get_toc($chapters, $chapter, $book, $cm, $edit)) {
+        if ($toc = book_get_toc($chapters, $chapter, $book, $cm, 0)) {
             $toc = $OUTPUT->box($toc, 'collapse', 'book_toc');
             echo $toc;
         }

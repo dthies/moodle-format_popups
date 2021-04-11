@@ -61,7 +61,8 @@ class mod_choice extends mod_page {
         }
 
         if (
-            $this->data->page === '/report.php'
+            !empty($this->data->page)
+            && $this->data->page === '/report.php'
             && $this->data->id == $choice->id
             && has_capability('mod/choice:readresponses', $this->context)
         ) {
@@ -72,7 +73,7 @@ class mod_choice extends mod_page {
 
         list($choiceavailable, $warnings) = choice_get_availability_status($choice);
 
-        if ($this->data->action == 'delchoice' and ($this->data->sesskey == sesskey())
+        if (!empty($this->data->action) && $this->data->action == 'delchoice' and ($this->data->sesskey == sesskey())
             and is_enrolled($this->context, null, 'mod/choice:choose') and $choice->allowupdate and $choiceavailable) {
             $answercount = $DB->count_records('choice_answers', array('choiceid' => $choice->id, 'userid' => $USER->id));
             if ($answercount > 0) {
