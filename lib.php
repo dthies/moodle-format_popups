@@ -115,6 +115,9 @@ function format_popups_output_fragment_page($args) {
     $contents = ob_get_contents();
     ob_end_clean();
 
+    // Trigger course viewed event.
+    course_view(context_course::instance($course->id), $displaysection);
+
     return $contents;
 }
 

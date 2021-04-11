@@ -1,4 +1,4 @@
-@format @format_popups
+@format @format_popups @javascript @format_popups_book
 Feature: Sections can be edited and deleted in popup activities format
   In order to view course content
   As a student
@@ -43,10 +43,16 @@ Feature: Sections can be edited and deleted in popup activities format
     And I log in as "student1"
     And I am on "Course 1" course homepage
 
-  @javascript @format_popups_book
   Scenario: Open book in modal
     When I follow "Test book"
     Then I should see "First chapter"
     And I follow "Next"
     And I should see "Second chapter"
+
+  Scenario: Exit book modal
+    When I follow "Test book"
+    And I follow "Next"
+    And I follow "Next"
+    And I follow "Exit book"
+    And I should see "Topic 1"
 

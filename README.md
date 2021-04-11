@@ -4,7 +4,7 @@ The Pop up activities course format displays resources and simple
 activities embedded in modals instead of redirecting from the course
 page.
 
-If you are not using heavy server side assessment, but mosty resources and
+If you are not using heavy server side assessment, but mostly resources and
 client side activities (SCORM, H5P), this format may help provide more
 interactive courses by opening the activities in popup modals instead
 of separate web pages. When students finish an activity or resource,
