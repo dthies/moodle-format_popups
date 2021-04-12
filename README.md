@@ -27,12 +27,13 @@ copying the AMD call in format.php and adding this format as a dependency.
 2. Upload the ZIP file with the plugin code. You should only be prompted
    to add extra details if your plugin type is not automatically detected.
 3. Check the plugin validation report and finish the installation.
-4. The capability *format/popups:view* as given to the student role
-   and controls whether and individual user sees an activity as a modal
-   or in the standard view.
+4. The capability *format/popups:view* is given to the student role
+   and controls whether an individual user sees an activity as a modal
+   or in the standard view. Add this to any other role you would like to
+   see the modals.
 5. When a course is created select this format from the menu in the
-   Course format setting add the some of the supported activities to
-   the course.
+   Course format setting  and then add the some of the supported activities
+   to the course.
 
 ## Installing manually ##
 
