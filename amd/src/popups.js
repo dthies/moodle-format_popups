@@ -45,14 +45,14 @@ export const init = (contextid, courseid, displaysection) => {
         large: true,
         title: 'title',
         body: '<div id="format_popups_activity_content"></div>'
-    }).then(function (modal) {
+    }).then(function(modal) {
         modal.contextid = contextid;
         modal.courseid = courseid;
         modal.displaysection = displaysection;
         modal.modules = [];
         registerListeners.bind(modal)();
 
-        Ajax.call([{
+        return Ajax.call([{
             methodname: 'format_popups_get_available_mods',
             args: {
                 contextid: modal.contextid

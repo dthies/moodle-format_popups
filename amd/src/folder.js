@@ -51,7 +51,7 @@ const embedFiles = (e) => {
             path = url.pathname.split('/').slice(-5);
         if (!url.searchParams.get('forcedownload') && path[0] == contextid) {
             let isimage = path[4].search('.') !== -1 &&
-                ['gif', 'jpg', 'jpeg', 'png', 'svg', ].includes(path[4].split('.').pop());
+                ['gif', 'jpg', 'jpeg', 'png', 'svg'].includes(path[4].split('.').pop());
             e.preventDefault();
             e.stopPropagation();
             templates.render(
