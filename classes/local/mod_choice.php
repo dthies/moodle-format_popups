@@ -47,8 +47,6 @@ class mod_choice extends mod_page {
     /**
      * Renders page contents
      *
-     * @method render
-     *
      * @return string page contents
      */
     public function render() {

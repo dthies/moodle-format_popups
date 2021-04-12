@@ -39,9 +39,8 @@ export const init = () => {
 };
 
 /**
- * Risize iframe to window height
+ * Resize iframe to window height
  *
- * @param int maxheight Maximum height to use for iframe
  */
 const resize = () => {
     'use strict';

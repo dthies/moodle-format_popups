@@ -28,7 +28,7 @@ var contextid;
 /**
  * Initialise listeners to folder resource
  *
- * @param int contextid Course module context id
+ * @param {int} id Course module context id
  */
 export const init = (id) => {
     'use strict';
@@ -40,7 +40,7 @@ export const init = (id) => {
 /**
  * Display resource when selected
  *
- * @param object event
+ * @param {object} e event
  */
 const embedFiles = (e) => {
     'use strict';

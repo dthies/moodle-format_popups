@@ -45,8 +45,6 @@ class mod_poster extends mod_page {
     /**
      * Renders page contents
      *
-     * @method render
-     *
      * @return string page contents
      */
     public function render() {
@@ -90,6 +88,12 @@ class mod_poster extends mod_page {
     }
 }
 
+/**
+ *  Mod poster overridden renderer
+ *
+ * @copyright  2021 Daniel Thies <dethies@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_poster_renderer extends \mod_poster_renderer {
     /**
      * Render the poster main view page (view.php)

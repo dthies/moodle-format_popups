@@ -30,8 +30,8 @@ var contextid, modname;
 /**
  * Listen for form submisson
  *
- * @param int contextid Course module context id
- * @param string modnameModelue type
+ * @param {int} id Course module context id
+ * @param {string} name Modeule type
  */
 export const init = (id, name) => {
     'use strict';
@@ -53,7 +53,7 @@ export const init = (id, name) => {
 /**
  * Submit form and load response
  *
- * @param object event
+ * @param {object} e event
  */
 const handleSubmit = (e) => {
     'use strict';

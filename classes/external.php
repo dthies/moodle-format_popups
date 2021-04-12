@@ -68,7 +68,7 @@ class external extends external_api {
     /**
      * Get list of mods available as popups
      *
-     * @param int $requestid The request ID.
+     * @param int $contextid The course module id
      * @return array
      * @throws invalid_persistent_exception
      * @throws coding_exception

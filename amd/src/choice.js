@@ -31,8 +31,8 @@ var contextid, modname;
 /**
  * Initialize Choice mod actions
  *
- * @param int contextid Course module context id
- * @param string modname Activity type
+ * @param {int} id Course module context id
+ * @param {string} name Activity type
  */
 export const init = (id, name) => {
     'use strict';
@@ -71,7 +71,7 @@ export const init = (id, name) => {
 /**
  * Load content for internal course links
  *
- * @param object event
+ * @param {object} e event
  */
 function handleLink(e) {
     'use strict';
@@ -115,7 +115,7 @@ function handleLink(e) {
 /**
  * Show report page
  *
- * @param string response text
+ * @param {string} response text
  */
 const showReport = (response) => {
     'use strict';
@@ -134,7 +134,7 @@ const showReport = (response) => {
 /**
  * Handle change group selector
  *
- * @param object event
+ * @param {object} e event
  */
 const changeGroup = (e) => {
     let form = e.target.closest('form');

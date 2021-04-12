@@ -1,5 +1,5 @@
 @format @format_popups @javascript @format_popups_book
-Feature: Sections can be edited and deleted in popup activities format
+Feature: Navigate book modal
   In order to view course content
   As a student
   I need to open resources in modals

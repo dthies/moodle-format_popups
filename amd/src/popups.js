@@ -34,8 +34,9 @@ import resize from 'format_popups/embed';
 /**
  * Initialize modal and listeners
  *
- * @param int Course context id
- * @param int displaysection Single section to display
+ * @param {int} Course context id
+ * @param {int} Course id
+ * @param {int} displaysection Single section to display
  */
 export const init = (contextid, courseid, displaysection) => {
     'use strict';
@@ -214,7 +215,7 @@ function registerListeners() {
 /**
  * Submit form and load response
  *
- * @param object event
+ * @param {object} e event
  */
 function handleCompletion(e) {
     'use strict';

@@ -48,8 +48,6 @@ class mod_book extends mod_page {
     /**
      * Renders page contents
      *
-     * @method render
-     *
      * @return string page contents
      */
     public function render() {

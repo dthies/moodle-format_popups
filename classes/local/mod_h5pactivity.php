@@ -50,8 +50,6 @@ class mod_h5pactivity extends mod_page {
     /**
      * Renders page contents
      *
-     * @method render
-     *
      * @return string page contents
      */
     public function render() {
@@ -116,6 +114,11 @@ class mod_h5pactivity extends mod_page {
         return $content;
     }
 
+    /**
+     * Renders page contents
+     *
+     * @return string page contents
+     */
     protected function render_report($manager, $moduleinstance) {
         $report = $manager->get_report($this->data->userid ?? 0, $this->data->attemptid ?? 0);
         if (!$report) {

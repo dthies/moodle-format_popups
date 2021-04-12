@@ -1,5 +1,5 @@
 @format @format_popups @javascript @format_popups_close
-Feature: Sections can be edited and deleted in popup activities format
+Feature: Modals can be closed and update course page
   In order to complete course content
   As a student
   I need to close modals and updated course page

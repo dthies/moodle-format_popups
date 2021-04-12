@@ -56,8 +56,11 @@ class mod_page {
     /**
      * Constructor
      *
+     * @param object $cm course module
      * @param object $content object from content.json file
-     * @param string $tempdir tempoorary directory location
+     * @param object $course course record
+     * @param object $data search params
+     * @param string $path requested file path
      */
     public function __construct($cm, $context, $course, $data, $path) {
 
@@ -74,8 +77,6 @@ class mod_page {
 
     /**
      * Renders page contents
-     *
-     * @method render
      *
      * @return string page contents
      */

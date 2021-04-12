@@ -30,7 +30,7 @@ var contextid;
 /**
  * Initial listerners to handle book navigation
  *
- * @param int contextid Course module context id
+ * @param {int} contextid Course module context id
  */
 export const init = (id) => {
     'use strict';
@@ -48,14 +48,14 @@ export const init = (id) => {
         templates.render('format_popups/booktoc', []).then(templates.prependNodeContents.bind(
             templates,
             content.closest('.modal-content').querySelector('.modal-title')
-        ));
+        )).fail(notification.exception);
     }
 };
 
 /**
  * Load chapter from navigatioin
  *
- * @param object event
+ * @param {object} e event
  */
 export const loadChapter = (e) => {
     'use strict';

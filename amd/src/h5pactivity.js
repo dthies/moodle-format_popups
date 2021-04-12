@@ -30,8 +30,9 @@ var contextid, modname, instance;
 /**
  * Initialize Choice mod actions
  *
- * @param int contextid Course module context id
- * @param string modname Activity type
+ * @param {int} id Course module context id
+ * @param {string} name Activity type
+ * @param {int} instanceid H5P activity instance id
  */
 export const init = (id, name, instanceid) => {
     'use strict';
@@ -46,7 +47,7 @@ export const init = (id, name, instanceid) => {
 /**
  * Show report page
  *
- * @param string response text
+ * @param {object} e Event
  */
 const showReport = (e) => {
     let anchor = e.target.closest('a');

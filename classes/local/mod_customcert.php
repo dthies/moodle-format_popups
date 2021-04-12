@@ -48,8 +48,6 @@ class mod_customcert extends mod_url {
     /**
      * Renders page contents
      *
-     * @method render
-     *
      * @return string page contents
      */
     public function render() {
