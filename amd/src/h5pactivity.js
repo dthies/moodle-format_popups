@@ -66,9 +66,9 @@ const showReport = (e) => {
                     jsondata: JSON.stringify(params.toString()),
                     modname: modname
                 }
-            ).then(function(html, js) {
-                templates.replaceNodeContents('#format_popups_activity_content', html, js);
-            }).fail(notification.exception);
+            ).then(
+                templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
+            ).fail(notification.exception);
         }
     }
 };

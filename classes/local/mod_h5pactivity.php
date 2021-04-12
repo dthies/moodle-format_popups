@@ -117,6 +117,8 @@ class mod_h5pactivity extends mod_page {
     /**
      * Renders page contents
      *
+     * @param object $manager
+     * @param stdClass $moduleinstance
      * @return string page contents
      */
     protected function render_report($manager, $moduleinstance) {
@@ -157,6 +159,7 @@ class mod_h5pactivity extends mod_page {
         echo $report->print();
         $contents = ob_get_contents();
         ob_end_clean();
+
         return $contents;
     }
 }

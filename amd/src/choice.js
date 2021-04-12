@@ -49,7 +49,7 @@ export const init = (id, name) => {
             html;
         if (id) {
             let label = document.querySelector('label[for="' + id + '"]');
-            select.setAttribute(id , id + '_popup');
+            select.setAttribute(id, id + '_popup');
             if (label) {
                 label.setAttribute('for', id + '_popup');
             }
@@ -105,9 +105,9 @@ function handleLink(e) {
                     jsondata: JSON.stringify(params.toString()),
                     modname: modname
                 }
-            ).then(function(html, js) {
-                templates.replaceNodeContents('#format_popups_activity_content', html, js);
-            }).fail(notification.exception);
+            ).then(
+                templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
+            ).fail(notification.exception);
         }
     }
 }
@@ -153,9 +153,9 @@ const changeGroup = (e) => {
                     jsondata: JSON.stringify(params.toString()),
                     modname: modname
                 }
-            ).then(function(html, js) {
-                templates.replaceNodeContents('#format_popups_activity_content', html, js);
-            }).fail(notification.exception);
+            ).then(
+                templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
+            ).fail(notification.exception);
         } else if (config.wwwroot + '/mod/choice/report.php' === url.origin + url.pathname) {
             let xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {

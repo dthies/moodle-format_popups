@@ -30,7 +30,7 @@ var contextid;
 /**
  * Initial listerners to handle book navigation
  *
- * @param {int} contextid Course module context id
+ * @param {int} id Course module context id
  */
 export const init = (id) => {
     'use strict';
@@ -83,8 +83,8 @@ export const loadChapter = (e) => {
                 jsondata: JSON.stringify(params.toString()),
                 modname: 'book'
             }
-        ).then(function(html, js) {
-            templates.replaceNodeContents('#format_popups_activity_content', html, js);
-        }).fail(notification.exception);
+        ).then(
+            templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
+        ).fail(notification.exception);
     }
 };

@@ -34,8 +34,8 @@ import resize from 'format_popups/embed';
 /**
  * Initialize modal and listeners
  *
- * @param {int} Course context id
- * @param {int} Course id
+ * @param {int} contextid Course context id
+ * @param {int} courseid Course id
  * @param {int} displaysection Single section to display
  */
 export const init = (contextid, courseid, displaysection) => {
@@ -62,7 +62,7 @@ export const init = (contextid, courseid, displaysection) => {
             }.bind(modal),
             fail: notification.exception
         }]);
-    });
+    }).fail(notification.exception);
 };
 
 /**
@@ -87,6 +87,7 @@ function updatePage() {
             html = form.innerHTML;
             templates.replaceNodeContents(form, html, '');
         });
+        return;
     }).fail(notification.exception);
 
     Ajax.call([{
@@ -164,11 +165,11 @@ function registerListeners() {
             content.removeEventListener('click', loadChapter);
             content.removeEventListener('resize', resize);
         }
-    }.bind(window));
+    });
 
     // Navigation links within the course page.
     document.querySelectorAll('#page-navbar, div.course-content').forEach(function(container) {
-        container.addEventListener('click', function (e) {
+        container.addEventListener('click', function(e) {
             let anchor = e.target.closest('a') || e.target;
             if (anchor && anchor.getAttribute('href')) {
                 let href = anchor.getAttribute('href');

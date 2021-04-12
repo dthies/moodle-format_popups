@@ -57,7 +57,7 @@ class mod_page {
      * Constructor
      *
      * @param object $cm course module
-     * @param object $content object from content.json file
+     * @param object $context object course module context
      * @param object $course course record
      * @param object $data search params
      * @param string $path requested file path

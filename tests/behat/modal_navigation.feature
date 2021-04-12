@@ -55,4 +55,3 @@ Feature: Navigate book modal
     And I follow "Next"
     And I follow "Exit book"
     And I should see "Topic 1"
-
