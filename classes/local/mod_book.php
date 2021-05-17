@@ -31,6 +31,7 @@ use stdClass;
 use context_user;
 use core_tag_tag;
 use html_writer;
+use moodle_exception;
 use moodle_url;
 
 require_once($CFG->dirroot.'/mod/book/lib.php');
@@ -95,7 +96,7 @@ class mod_book extends mod_page {
             'id' => $chapterid,
             'bookid' => $book->id,
         ))) or ($chapter->hidden and !$viewhidden)) {
-            print_error('errorchapter', 'mod_book', $courseurl);
+            throw new moodle_exception('errorchapter', 'book', $courseurl);
         }
 
         // Unset all page parameters.

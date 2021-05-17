@@ -35,6 +35,7 @@ use core_h5p\helper;
 use mod_h5pactivity\local\manager;
 use mod_h5pactivity\output\reportlink;
 use mod_h5pactivity\event\report_viewed;
+use moodle_exception;
 use moodle_url;
 
 require_once($CFG->dirroot . '/mod/h5pactivity/lib.php');
@@ -124,7 +125,7 @@ class mod_h5pactivity extends mod_page {
     protected function render_report($manager, $moduleinstance) {
         $report = $manager->get_report($this->data->userid ?? 0, $this->data->attemptid ?? 0);
         if (!$report) {
-            print_error('permissiondenied');
+            throw new moodle_exception('permissiondenied', 'h5pactivity');
         }
 
         $user = $report->get_user();

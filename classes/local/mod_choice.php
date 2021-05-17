@@ -32,6 +32,7 @@ use context_course;
 use context_module;
 use context_system;
 use context_user;
+use moodle_exception;
 use moodle_url;
 
 require_once($CFG->dirroot . '/mod/choice/lib.php');
@@ -55,7 +56,7 @@ class mod_choice extends mod_page {
         $course = $DB->get_record('course', array('id' => $this->cm->course), '*', MUST_EXIST);
 
         if (!$choice = choice_get_choice($this->cm->instance)) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule', 'choice');
         }
 
         if (

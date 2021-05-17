@@ -29,11 +29,12 @@ var cmid, contextid;
 /**
  * Initialise listeners to folder resource
  *
- * @param {int} id Course module context id
+ * @param {int} context Course module context id
+ * @param {int} cm Course module id
  */
-export const init = (id, cm) => {
+export const init = (context, cm) => {
     'use strict';
-    contextid = id;
+    contextid = context;
     cmid = cm;
     document.querySelector('#format_popups_activity_content').removeEventListener('click', embedFiles);
     document.querySelector('#format_popups_activity_content').addEventListener('click', embedFiles);
@@ -50,7 +51,7 @@ const embedFiles = (e) => {
 
     if (anchor) {
         let url = new URL(anchor.getAttribute('href')),
-            returnurl = new URL(config.wwwroot  + '/mod/folder/view.php'),
+            returnurl = new URL(config.wwwroot + '/mod/folder/view.php'),
             path = url.pathname.split('/').slice(-5);
         if (!url.searchParams.get('forcedownload') && path[0] == contextid) {
             let isimage = path[4].search('.') !== -1 &&
