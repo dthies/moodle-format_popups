@@ -15,7 +15,7 @@ This plugin uses javascript to add AJAX functionality to the
 standard topics format. Otherwise the format is the same as topics
 format. Currently Book, Choice, Custom certificate, File resource,
 Folder, H5P, Page, Poster, SCORM, and URL activities are supported and
-can be displayed in modals. Other activities while open normally.
+can be displayed in modals. Other activities will open normally.
 
 Developers should be able to add similar functionality to other formats by
 copying the AMD call in format.php and adding this format as a dependency.

@@ -70,7 +70,7 @@ class mod_folder extends mod_page {
         $completion->set_module_viewed($this->cm);
 
         $output = $PAGE->get_renderer('mod_folder');
-        $PAGE->requires->js_call_amd('format_popups/folder', 'init', array($this->context->id));
+        $PAGE->requires->js_call_amd('format_popups/folder', 'init', array($this->context->id, $this->cm->id));
 
         return $output->display_folder($folder);
     }

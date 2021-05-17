@@ -168,7 +168,7 @@ function registerListeners() {
     });
 
     // Navigation links within the course page.
-    document.querySelectorAll('#page-navbar, div.course-content').forEach(function(container) {
+    document.querySelectorAll('#page-navbar, #nav-drawer, div.course-content').forEach(function(container) {
         container.addEventListener('click', function(e) {
             let anchor = e.target.closest('a') || e.target;
             if (anchor && anchor.getAttribute('href')) {

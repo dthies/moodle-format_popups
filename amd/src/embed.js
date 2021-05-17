@@ -32,7 +32,7 @@ export const init = () => {
     window.removeEventListener('resize', resize);
 
     iframe = document.querySelector(
-        '#format_popups_activity_content img, #format_popups_activity_content iframe'
+        '#format_popups_activity_content iframe'
     );
 
     window.removeEventListener('resize', resize);

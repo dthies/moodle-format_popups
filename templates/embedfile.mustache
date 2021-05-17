@@ -43,9 +43,16 @@
     <button class="btn btn-primary">
         {{# str }} download {{/ str }}
     </button>
-    <button class="btn btn-secondary" data-action="hide">
-        {{# str }} cancel {{/ str }}
-    </button>
+    {{# returnurl }}
+        <a class="btn btn-secondary" href="{{ returnurl }}">
+            {{# str }} cancel {{/ str }}
+        </a>
+    {{/ returnurl }}
+    {{^ returnurl }}
+        <a class="btn btn-secondary" href="#" data-action="hide">
+            {{# str }} cancel {{/ str }}
+        </a>
+    {{/ returnurl }}
 </form>
 {{/ downloadurl }}
 {{# downloadurl }}

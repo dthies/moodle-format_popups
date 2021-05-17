@@ -103,7 +103,7 @@ function format_popups_output_fragment_page($args) {
     $course = get_course($context->instanceid);
 
     $displaysection = clean_param($args['displaysection'], PARAM_INT);
-    $renderer = $PAGE->get_renderer('format_popups');
+    $renderer = $PAGE->get_renderer('format_' . $course->format);
     ob_start();
 
     if (empty($displaysection)) {
