@@ -19,7 +19,7 @@
  *
  * @package    format_popups
  * @copyright  2021 Daniel Thies <dethies@gmail.com>
- *             adapted from Moodle mod_page
+ *             adapted from mod_videotime view.php
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -38,44 +38,7 @@ use mod_videotime\videotime_instance;
  * @copyright  2021 Daniel Thies <dethies@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_videotime {
-
-    /** @var string page path if submittend */
-    protected $path = null;
-
-    /** @var object $cm course module */
-    protected $cm = null;
-
-    /** @var object $course course for course module */
-    protected $course = null;
-
-    /** @var object $context context for course module */
-    protected $context = null;
-
-    /** @var object $data data for course module */
-    protected $data = null;
-
-    /**
-     * Constructor
-     *
-     * @param object $cm course module
-     * @param object $context object course module context
-     * @param object $course course record
-     * @param object $data search params
-     * @param string $path requested file path
-     */
-    public function __construct($cm, $context, $course, $data, $path) {
-
-        $this->cm = $cm;
-
-        $this->course = $course;
-
-        $this->context = $context;
-
-        $this->path = $path;
-
-        $this->data = $data;
-    }
+class mod_videotime extends mod_page {
 
     /**
      * Renders page contents
