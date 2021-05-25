@@ -91,6 +91,7 @@ function updatePage() {
             html = form.innerHTML;
             templates.replaceNodeContents(form, html, '');
         });
+        return;
     }).fail(notification.exception);
 
     Ajax.call([{
