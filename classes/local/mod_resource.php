@@ -108,12 +108,12 @@ class mod_resource extends mod_url {
             // Media (audio/video) file.
             $code = $mediamanager->embed_url($moodleurl, $title, 0, 0, $embedoptions);
 
-        } else if (true || in_array((int) $resourse->display, array(
+        } else if (in_array((int) $resourse->display, array(
             RESOURCELIB_DISPLAY_EMBED,
             RESOURCELIB_DISPLAY_OPEN,
             RESOURCELIB_DISPLAY_POPUP,
         ))) {
-            self::resource_display_embed($resource, $this->cm, $this->course);
+            self::resource_display_embed($resource, $this->cm, $this->course, $file);
             $PAGE->requires->js_call_amd('format_popups/embed', 'init', array($this->context->id));
             $code = '';
 
@@ -146,7 +146,7 @@ class mod_resource extends mod_url {
 
         $clicktoopen = resource_get_clicktoopen($file, $resource->revision);
 
-        $context = context_module::instance($cm->id);
+        $context = $this->context;
         $moodleurl = moodle_url::make_pluginfile_url($context->id, 'mod_resource', 'content', $resource->revision,
                 $file->get_filepath(), $file->get_filename());
 

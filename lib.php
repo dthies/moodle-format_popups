@@ -98,6 +98,10 @@ function format_popups_output_fragment_mod($args) {
 function format_popups_output_fragment_page($args) {
     global $PAGE;
 
+    // Do not update if editing.
+    if ($PAGE->user_is_editing()) {
+        return '';
+    }
     $context = $args['context'];
     $displaysection = $args['displaysection'];
     $course = get_course($context->instanceid);
