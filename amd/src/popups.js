@@ -23,7 +23,6 @@
  */
 import Ajax from 'core/ajax';
 import config from 'core/config';
-import {types} from 'core_form/events';
 import Fragment from 'core/fragment';
 import ModalEvents from 'core/modal_events';
 import ModalFactory from 'core/modal_factory';
@@ -80,9 +79,6 @@ function updatePage() {
             displaysection: this.displaysection
         }
     ).then(function(html, js) {
-        if (!html.length) {
-            return;
-        }
         templates.replaceNodeContents('div.course-content', html, js);
         document.querySelectorAll('form#sectionmenu select').forEach(function(selector) {
             let form = selector.closest('form'),
@@ -158,21 +154,6 @@ function registerListeners() {
 
     // Update the page so new completion and conditions show.
     this.getRoot().on(ModalEvents.hidden, updatePage.bind(this));
-
-    // Add event listener for file upload complete.
-    document.addEventListener(types.uploadCompleted, function() {
-        'use strict';
-        Ajax.call([{
-            methodname: 'format_popups_get_available_mods',
-            args: {
-                contextid: this.contextid
-            },
-            done: function(modules) {
-                this.modules = modules;
-            }.bind(this),
-            fail: notification.exception
-        }]);
-    }.bind(this));
 
     // Listen for manual completion update.
     document.querySelector('div.course-content').addEventListener('submit', handleCompletion.bind(this));
