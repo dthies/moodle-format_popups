@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'format_popups';
 $plugin->release = '1.0.1';
-$plugin->version = 2021052600;
+$plugin->version = 2021052601;
 $plugin->requires = 2020110900;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [

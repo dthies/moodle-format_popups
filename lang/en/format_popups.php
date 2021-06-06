@@ -34,3 +34,4 @@ $string['showfromothers'] = 'Show topic';
 $string['pluginname'] = 'Pop up activities';
 $string['privacy:metadata'] = 'The Pop up activities format plugin does not store any personal data.';
 $string['popups:view'] = 'View activities in modal';
+$string['currentsection'] = 'This topic';
