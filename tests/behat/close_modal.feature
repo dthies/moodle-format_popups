@@ -31,9 +31,9 @@ Feature: Modals can be closed and update course page
   Scenario: Close page modal
     When I follow "Test page name"
     And I click on "Close" "button"
-    Then the "Test page name" "page" activity with "auto" completion should be marked as complete
+    Then I should see "" in the "img[title='Completed: Test page name'], div[aria-label='Completion requirements for Test page name'] span.badge-success" "css_element"
 
   Scenario: Close choice  modal
     When I follow "Test choice name"
     And I click on "Close" "button"
-    Then the "Test choice name" "choice" activity with "auto" completion should be marked as complete
+    Then I should see "" in the "img[title='Completed: Test choice name'], div[aria-label='Completion requirements for Test choice name'] span.badge-success" "css_element"
