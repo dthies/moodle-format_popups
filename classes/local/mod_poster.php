@@ -48,7 +48,7 @@ class mod_poster extends mod_page {
      * @return string page contents
      */
     public function render() {
-        global $DB, $PAGE;
+        global $DB;
 
         $course = $this->course;
         $cm = $this->cm;

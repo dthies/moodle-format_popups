@@ -59,17 +59,6 @@ class mod_choice extends mod_page {
             throw new moodle_exception('invalidcoursemodule', 'choice');
         }
 
-        if (
-            !empty($this->data->page)
-            && $this->data->page === '/report.php'
-            && $this->data->id == $choice->id
-            && has_capability('mod/choice:readresponses', $this->context)
-        ) {
-            return 'hello world';
-        }
-        $strchoice = get_string('modulename', 'choice');
-        $strchoices = get_string('modulenameplural', 'choice');
-
         list($choiceavailable, $warnings) = choice_get_availability_status($choice);
 
         if (!empty($this->data->action) && $this->data->action == 'delchoice' and ($this->data->sesskey == sesskey())
@@ -123,7 +112,7 @@ class mod_choice extends mod_page {
                 // We cannot use the 'makechoice' alone because there might be some legacy renderers without it,
                 // outdated renderers will not get the 'mustchoose' message - bad luck.
                 redirect(new moodle_url('/mod/choice/view.php',
-                    array('id' => $cm->id, 'notify' => 'mustchooseone', 'sesskey' => sesskey())));
+                    array('id' => $this->cm->id, 'notify' => 'mustchooseone', 'sesskey' => sesskey())));
             }
         }
 
@@ -246,8 +235,6 @@ class mod_choice extends mod_page {
         }
 
         if (!$choiceformshown) {
-            $sitecontext = context_system::instance();
-
             if (isguestuser()) {
                 // Guest account.
                 $content .= $OUTPUT->confirm(get_string('noguestchoose', 'choice').'<br /><br />'.get_string('liketologin'),

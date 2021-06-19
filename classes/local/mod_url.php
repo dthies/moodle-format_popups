@@ -161,13 +161,10 @@ class mod_url extends mod_page {
      * @return string html
      */
     protected static function resourcelib_embed_general($fullurl, $title, $clicktoopen, $mimetype) {
-        global $CFG, $PAGE;
 
         if ($fullurl instanceof moodle_url) {
             $fullurl = $fullurl->out();
         }
-
-        $param = '<param name="src" value="'.$fullurl.'" />';
 
         // Always use iframe embedding because object tag does not work much,
         // this is ok in HTML5.

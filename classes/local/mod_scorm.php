@@ -107,22 +107,11 @@ class mod_scorm extends mod_page {
                     $launch = true;
                 }
             }
-            // Redirect back to the section with one section per page ?
-
-            $courseformat = course_get_format($course)->get_course();
-            if ($courseformat->format == 'singleactivity') {
-                $courseurl = $url->out(false, array('preventskip' => '1'));
-            } else {
-                $courseurl = course_get_url($course, $cm->sectionnum)->out(false);
-            }
         }
 
         if (isset($SESSION->scorm)) {
             unset($SESSION->scorm);
         }
-
-        $strscorms = get_string("modulenameplural", "scorm");
-        $strscorm  = get_string("modulename", "scorm");
 
         // Trigger module viewed event.
         scorm_view($scorm, $course, $cm, $contextmodule);
@@ -148,10 +137,6 @@ class mod_scorm extends mod_page {
 
         if ($available && empty($launch)) {
             scorm_print_launch($USER, $scorm, 'view.php?id='.$cm->id, $cm);
-        }
-        if (!empty($forcejs)) {
-            $message = $OUTPUT->box(get_string("forcejavascriptmessage", "scorm"), "container forcejavascriptmessage");
-            echo html_writer::tag('noscript', $message);
         }
 
         $contents = ob_get_contents();

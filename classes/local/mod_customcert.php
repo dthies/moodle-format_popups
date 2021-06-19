@@ -51,7 +51,7 @@ class mod_customcert extends mod_url {
      * @return string page contents
      */
     public function render() {
-        global $DB, $OUTPUT, $PAGE, $SESSION, $USER;
+        global $OUTPUT;
 
         require_capability('mod/customcert:view', $this->context);
 

@@ -52,7 +52,7 @@ class mod_book extends mod_page {
      * @return string page contents
      */
     public function render() {
-        global $DB, $OUTPUT, $PAGE, $SESSION, $USER;
+        global $DB, $OUTPUT, $PAGE;
         $cm = $this->cm;
         $course = $this->course;
         $context = $this->context;
@@ -100,8 +100,6 @@ class mod_book extends mod_page {
         }
 
         // Unset all page parameters.
-        unset($id);
-        unset($bid);
         unset($chapterid);
 
         // Prepare chapter navigation icons.

@@ -79,7 +79,6 @@ class mod_resource extends mod_url {
         }
 
         $resource->mainfile = $file->get_filename();
-        $displaytype = resource_get_final_display_type($resource);
 
         $moodleurl = moodle_url::make_pluginfile_url($this->context->id, 'mod_resource', 'content', $resource->revision,
                 $file->get_filepath(), $file->get_filename());
@@ -108,7 +107,7 @@ class mod_resource extends mod_url {
             // Media (audio/video) file.
             $code = $mediamanager->embed_url($moodleurl, $title, 0, 0, $embedoptions);
 
-        } else if (in_array((int) $resourse->display, array(
+        } else if (in_array((int) $resource->display, array(
             RESOURCELIB_DISPLAY_EMBED,
             RESOURCELIB_DISPLAY_OPEN,
             RESOURCELIB_DISPLAY_POPUP,
@@ -142,7 +141,7 @@ class mod_resource extends mod_url {
      * @return does not return
      */
     protected function resource_display_embed($resource, $cm, $course, $file) {
-        global $CFG, $PAGE, $OUTPUT;
+        global $PAGE;
 
         $clicktoopen = resource_get_clicktoopen($file, $resource->revision);
 

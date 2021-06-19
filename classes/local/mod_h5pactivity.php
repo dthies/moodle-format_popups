@@ -54,7 +54,7 @@ class mod_h5pactivity extends mod_page {
      * @return string page contents
      */
     public function render() {
-        global $DB, $OUTPUT, $PAGE, $USER;
+        global $OUTPUT, $PAGE, $USER;
 
         list ($course, $this->cm) = get_course_and_cm_from_cmid($this->cm->id, 'h5pactivity');
 

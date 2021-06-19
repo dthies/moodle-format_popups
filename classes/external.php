@@ -76,9 +76,7 @@ class external extends external_api {
      * @throws restricted_context_exception
      */
     public static function get_available_mods($contextid) {
-        global $COURSE, $USER;
-
-        $params = external_api::validate_parameters(self::get_available_mods_parameters(), [
+        external_api::validate_parameters(self::get_available_mods_parameters(), [
             'contextid' => $contextid,
         ]);
 
