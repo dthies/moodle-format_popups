@@ -107,10 +107,23 @@ function format_popups_output_fragment_page($args) {
     $course = get_course($context->instanceid);
 
     $displaysection = clean_param($args['displaysection'], PARAM_INT);
-    $renderer = $PAGE->get_renderer('format_' . $course->format);
-    ob_start();
 
-    if (empty($displaysection)) {
+    // Retrieve course format option fields and add them to the $course object.
+    $format = course_get_format($course);
+    $course = $format->get_course();
+
+    $renderer = $PAGE->get_renderer('format_' . $format->get_format());
+
+    // Use best renderer method avaible.
+    ob_start();
+    if (method_exists($format, 'get_output_classname')) {
+        if (!empty($displaysection)) {
+            $format->set_section_number($displaysection);
+        }
+        $outputclass = $format->get_output_classname('course_format');
+        $widget = new $outputclass($format);
+        echo $renderer->render($widget);
+    } else if (empty($displaysection)) {
         $renderer->print_multiple_section_page($course, null, null, null, null);
     } else {
         $renderer->print_single_section_page($course, null, null, null, null, $displaysection);
