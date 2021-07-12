@@ -23,7 +23,6 @@
  */
 import Ajax from 'core/ajax';
 import config from 'core/config';
-import {types} from 'core_form/events';
 import Fragment from 'core/fragment';
 import ModalEvents from 'core/modal_events';
 import ModalFactory from 'core/modal_factory';
@@ -51,6 +50,7 @@ export const init = (contextid, courseid, displaysection) => {
         modal.courseid = courseid;
         modal.displaysection = displaysection;
         modal.modules = [];
+        modal.modulecount = document.querySelectorAll('.activity').length;
         registerListeners.bind(modal)();
 
         return Ajax.call([{
@@ -160,8 +160,15 @@ function registerListeners() {
     this.getRoot().on(ModalEvents.hidden, updatePage.bind(this));
 
     // Add event listener for file upload complete.
-    document.addEventListener(types.uploadCompleted, function() {
+    document.addEventListener('focusin', function() {
         'use strict';
+
+        // Check whether number of modules changed. if so we need to update.
+        if (this.modulecount === document.querySelectorAll('.activity').length) {
+            return;
+        }
+        this.modulecount = document.querySelectorAll('.activity').length;
+
         Ajax.call([{
             methodname: 'format_popups_get_available_mods',
             args: {
