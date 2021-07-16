@@ -82,7 +82,7 @@ class mod_poster extends mod_page {
         $page->blocks->add_region('mod_poster-pre', true);
         $page->blocks->add_region('mod_poster-post', true);
 
-        $output = new mod_poster_renderer($page, RENERER_TARGET_GENERAL);
+        $output = new mod_poster_renderer($page, RENDERER_TARGET_GENERAL);
 
         return  $output->view_page($poster);
     }

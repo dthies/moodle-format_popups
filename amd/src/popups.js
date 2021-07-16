@@ -202,7 +202,7 @@ function registerListeners() {
                 if (href.search(config.wwwroot + '/course/view.php') === 0) {
                     let url = new URL(href),
                         params = url.searchParams;
-                    if (params.get('id') === this.courseid) {
+                    if (params.get('id') === this.courseid && Number.isInteger(params.get('section'))) {
                         this.displaysection = params.get('section');
                         updatePage.bind(this)();
                         e.preventDefault();
