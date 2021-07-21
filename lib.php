@@ -65,6 +65,8 @@ function format_popups_inplace_editable($itemtype, $itemid, $newvalue) {
  * @return string content
  */
 function format_popups_output_fragment_mod($args) {
+    global $OUTPUT, $USER;
+
     $context = $args['context'];
     $modname = clean_param($args['modname'], PARAM_COMPONENT);
     if (key_exists('jsondata', $args)) {
@@ -86,7 +88,19 @@ function format_popups_output_fragment_mod($args) {
 
     $module = new $class($cm, $context, $course, $data, $path);
 
-    return '<div>' . $module->render() . '</div>';
+    $content = $module->render();
+
+    // Render the activity information.
+    if (
+        class_exists('\\core_completion\\activity_custom_completion')
+        && $course->showcompletionconditions != COMPLETION_SHOW_CONDITIONS
+    ) {
+        $cminfo = cm_info::create($cm);
+        $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
+        $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
+        $content = $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates) . $content;
+    }
+    return '<div>' . $content . '</div>';
 }
 
 /**
