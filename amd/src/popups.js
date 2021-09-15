@@ -117,6 +117,7 @@ function registerListeners() {
     document.querySelector('body').addEventListener('click', function(e) {
         let anchor = e.target.closest('a');
         if (anchor && anchor.getAttribute('href')
+            && !anchor.getAttribute('onclick')
             && anchor.getAttribute('href').match('http')
             && anchor.closest('div.course-content, #format_popups_activity_content')
         ) {
