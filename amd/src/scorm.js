@@ -17,7 +17,6 @@
  * Module to resize scorm activitiy to fit window
  *
  * @module     format_popups/scorm
- * @package    format_popups
  * @copyright  2021 Daniel Thies <dethies@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

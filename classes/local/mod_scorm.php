@@ -29,6 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 
 use stdClass;
 use context_user;
+use html_writer;
+use js_writer;
 use moodle_url;
 
 require_once($CFG->dirroot.'/mod/scorm/lib.php');
@@ -57,7 +59,33 @@ class mod_scorm extends mod_page {
 
         ob_start();
 
-        if (!empty($this->data)) {
+        if (!empty($this->data) && !empty($this->data->scoid)) {
+            if ($scorm->popup != 0 && $displaymode !== 'popup') {
+                // Clean the name for the window as IE is fussy.
+                $name = preg_replace("/[^A-Za-z0-9]/", "", $scorm->name);
+                if (!$name) {
+                    $name = 'DefaultPlayerWindow';
+                }
+                $name = 'scorm_'.$name;
+                echo html_writer::script('', $CFG->wwwroot.'/mod/scorm/player.js');
+                $url = new moodle_url('/mod/scorm/player.php', array(
+                    'cm' => $this->cm->id,
+                    'scoid' => $this->data->scoid,
+                    'display' => 'popup',
+                    'mode' => $this->data->mode ?? 'normal',
+                ));
+                echo html_writer::script(
+                    js_writer::function_call('scorm_openpopup', Array($url->out(false),
+                                                       $name, $scorm->options,
+                                                       $scorm->width, $scorm->height)));
+                    $contents = ob_get_contents();
+                    ob_end_clean();
+
+                    $PAGE->requires->jquery('
+                        $("#popup").closest(".modal").hide();
+                    ');
+                    return $contents;
+            }
             $url = new moodle_url("/mod/scorm/player.php", array(
                 'a' => $this->cm->instance,
                 'currentorg' => $this->data->currentorg,

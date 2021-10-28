@@ -17,7 +17,6 @@
  * Module to add navigation to book modal
  *
  * @module     format_popups/book
- * @package    format_popups
  * @copyright  2021 Daniel Thies <dethies@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

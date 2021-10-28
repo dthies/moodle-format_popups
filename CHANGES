@@ -1,3 +1,5 @@
+1.0.8 Add SCORM landing form support new window setting
+
 1.0.7 Prevent modal if listener for external window found
 
 1.0.6 Show activity info in the modal if not on course page

@@ -17,7 +17,6 @@
  * Module to initialise modal with listeners
  *
  * @module     format_popups/popups
- * @package    format_popups
  * @copyright  2021 Daniel Thies <dethies@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -238,6 +237,17 @@ function registerListeners() {
         html = form.innerHTML;
         templates.replaceNodeContents(form, html, '');
     });
+
+    // If window looses focus and and modal is empty, then close the modal. This
+    // happens when a SCORM package is opened in external window.
+    window.addEventListener('blur', function() {
+        if (
+            document.getElementById('format_popups_activity_content') &&
+            window.getComputedStyle(document.getElementById('format_popups_activity_content')).height == '0px'
+        ) {
+           this.hide();
+        }
+    }.bind(this));
 }
 
 /**

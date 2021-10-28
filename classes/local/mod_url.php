@@ -97,7 +97,6 @@ class mod_url extends mod_page {
                 ));
                 break;
             default:
-                url_print_workaround($url, $cm, $course);
                 break;
         }
 
