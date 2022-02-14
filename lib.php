@@ -100,6 +100,7 @@ function format_popups_output_fragment_mod($args) {
         $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
         $content = $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates) . $content;
     }
+    $content .= $OUTPUT->activity_navigation();
     return '<div>' . $content . '</div>';
 }
 
