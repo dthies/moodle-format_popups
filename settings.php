@@ -26,8 +26,18 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-    // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
     if ($ADMIN->fulltree) {
-        // TODO: Define the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
+        // Define the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
+        $settings->add(new admin_setting_heading(
+            'format_popups/defaults',
+            new lang_string('coursesettings', 'moodle'),
+            ''
+        ));
+        $settings->add(new admin_setting_configcheckbox(
+            'format_popups/addnavigation',
+            new lang_string('addnavigation', 'format_popups'),
+            new lang_string('addnavigation_help', 'format_popups'),
+            0
+        ));
     }
 }

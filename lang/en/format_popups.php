@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['addnavigation'] = 'Add navigation links';
+$string['addnavigation_help'] = 'This adds links to the bottom of the popup like those available at the bottom of an activity page to go to the next or previous assignment. The activities will be loaded in the modal if that is supported by this course format.';
 $string['addsections'] = 'Add topics';
 $string['sectionname'] = 'Topic';
 $string['section0name'] = 'General';

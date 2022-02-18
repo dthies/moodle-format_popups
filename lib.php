@@ -37,6 +37,73 @@ use core\output\inplace_editable;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_popups extends format_topics {
+
+    /**
+     * Definitions of the additional options that this course format uses for course.
+     *
+     * Topics format uses the following options:
+     * - coursedisplay
+     * - hiddensections
+     *
+     * @param bool $foreditform
+     * @return array of options
+     */
+    public function course_format_options($foreditform = false) {
+        static $courseformatoptions = false;
+        if ($courseformatoptions === false) {
+            $courseconfig = get_config('moodlecourse');
+            $courseformatoptions = [
+                'hiddensections' => [
+                    'default' => $courseconfig->hiddensections,
+                    'type' => PARAM_INT,
+                ],
+                'coursedisplay' => [
+                    'default' => $courseconfig->coursedisplay,
+                    'type' => PARAM_INT,
+                ],
+                'addnavigation' => [
+                    'default' => get_config('format_popups', 'addnavigation'),
+                    'type' => PARAM_INT,
+                ],
+            ];
+        }
+        if ($foreditform && !isset($courseformatoptions['coursedisplay']['label'])) {
+            $courseformatoptionsedit = [
+                'addnavigation' => [
+                    'label' => new lang_string('addnavigation', 'format_popups'),
+                    'help' => 'addnavigation',
+                    'help_component' => 'format_popups',
+                    'element_type' => 'advcheckbox',
+                ],
+                'hiddensections' => [
+                    'label' => new lang_string('hiddensections'),
+                    'help' => 'hiddensections',
+                    'help_component' => 'moodle',
+                    'element_type' => 'select',
+                    'element_attributes' => [
+                        [
+                            0 => new lang_string('hiddensectionscollapsed'),
+                            1 => new lang_string('hiddensectionsinvisible')
+                        ],
+                    ],
+                ],
+                'coursedisplay' => [
+                    'label' => new lang_string('coursedisplay'),
+                    'element_type' => 'select',
+                    'element_attributes' => [
+                        [
+                            COURSE_DISPLAY_SINGLEPAGE => new lang_string('coursedisplay_single'),
+                            COURSE_DISPLAY_MULTIPAGE => new lang_string('coursedisplay_multi'),
+                        ],
+                    ],
+                    'help' => 'coursedisplay',
+                    'help_component' => 'moodle',
+                ],
+            ];
+            $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
+        }
+        return $courseformatoptions;
+    }
 }
 
 /**
@@ -100,7 +167,10 @@ function format_popups_output_fragment_mod($args) {
         $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
         $content = $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates) . $content;
     }
-    $content .= $OUTPUT->activity_navigation();
+    $course = course_get_format($course)->get_course();
+    if ($course->addnavigation) {
+        $content .= $OUTPUT->activity_navigation();
+    }
     return '<div>' . $content . '</div>';
 }
 
