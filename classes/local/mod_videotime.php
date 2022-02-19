@@ -25,8 +25,6 @@
 
 namespace format_popups\local;
 
-defined('MOODLE_INTERNAL') || die();
-
 use stdClass;
 use html_writer;
 use mod_videotime\output\next_activity_button;

@@ -25,8 +25,6 @@
 
 namespace format_popups\local;
 
-defined('MOODLE_INTERNAL') || die();
-
 use stdClass;
 use context_user;
 
