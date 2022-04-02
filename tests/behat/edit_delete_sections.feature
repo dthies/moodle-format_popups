@@ -29,6 +29,7 @@ Feature: Sections can be edited and deleted in popup activities format
     And the field "New value for Section name" matches value "General"
 
   Scenario: Edit the default name of the general section in popup activities format
+    Given I should see "General" in the "General" "section"
     When I edit the section "0" and I fill the form with:
       | Custom | 1                     |
       | New value for Section name      | This is the general section |
@@ -77,16 +78,14 @@ Feature: Sections can be edited and deleted in popup activities format
     And I should see "Topic 4"
 
   @javascript
-  Scenario: Adding sections in popup activities format
-    When I follow "Add topics"
-    Then the field "Number of sections" matches value "1"
-    And I press "Add topics"
-    And I should see "Topic 6" in the "li#section-6" "css_element"
-    And "li#section-7" "css_element" should not exist
-    And I follow "Add topics"
-    And I set the field "Number of sections" to "3"
-    And I press "Add topics"
-    And I should see "Topic 7" in the "li#section-7" "css_element"
-    And I should see "Topic 8" in the "li#section-8" "css_element"
-    And I should see "Topic 9" in the "li#section-9" "css_element"
-    And "li#section-10" "css_element" should not exist
+  Scenario: Adding sections at the end of a popups format
+    When I click on "Add topics" "link" in the "Topic 5" "section"
+    Then I should see "Topic 6" in the "Topic 6" "section"
+    And I should see "Test choice name" in the "Topic 5" "section"
+
+  @javascript
+  Scenario: Adding sections between topics in popups format
+    When I click on "Add topics" "link" in the "Topic 4" "section"
+    Then I should see "Topic 6" in the "Topic 6" "section"
+    And I should not see "Test choice name" in the "Topic 5" "section"
+    And I should see "Test choice name" in the "Topic 6" "section"

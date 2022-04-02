@@ -25,15 +25,15 @@ Feature: Modals can be closed and update course page
     And I am on "Course 1" course homepage
 
   Scenario: Open view in modal
-    When I follow "Test page name"
+    When I click on "Test page name" "link" in the "region-main" "region"
     Then I should see "Test page content"
 
   Scenario: Close page modal
-    When I follow "Test page name"
-    And I click on "Close" "button"
-    Then "img[title='Completed: Test page name'], div[aria-label='Completion requirements for Test page name'] span.badge-success" "css_element" should exist
+    When I click on "Test page name" "link" in the "region-main" "region"
+    And I click on "Close" "button" in the "Test page name" "dialogue"
+    Then I should see "Done: View" in the "[data-region='activity-information'][data-activityname='Test page name']" "css_element"
 
   Scenario: Close choice  modal
-    When I follow "Test choice name"
-    And I click on "Close" "button"
-    Then "img[title='Completed: Test choice name'], div[aria-label='Completion requirements for Test choice name'] span.badge-success" "css_element" should exist
+    When I click on "Test choice name" "link" in the "region-main" "region"
+    And I click on "Close" "button" in the "Test choice name" "dialogue"
+    Then I should see "Done: View" in the "[data-region='activity-information'][data-activityname='Test choice name']" "css_element"

@@ -28,12 +28,13 @@ Feature: Navigation links
   Scenario: Links not shown
     Given I log in as "student1"
     And I am on "Course 1" course homepage
-    When I follow "Test page 1"
+    When I click on "Test page 1" "link" in the "region-main" "region"
     Then I should not see "Test choice 1" in the "Test page 1" "dialogue"
 
+  @test
   Scenario: Follow navigation links
     Given I log in as "student1"
     And I am on "Course 2" course homepage
-    When I follow "Test page 2"
+    When I click on "Test page 2" "link" in the "region-main" "region"
     And I click on "Test choice 2" "link" in the "Test page 2" "dialogue"
     Then I should see "Test page 2" in the "Test choice 2" "dialogue"

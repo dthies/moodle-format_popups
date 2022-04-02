@@ -24,7 +24,7 @@ Feature: Navigate book modal
       | teacher1 | C1     | editingteacher |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I follow "Test book"
+    And I click on "Test book" "link" in the "region-main" "region"
     And I set the following fields to these values:
       | Chapter title | First chapter |
       | Content | First chapter |
@@ -44,13 +44,13 @@ Feature: Navigate book modal
     And I am on "Course 1" course homepage
 
   Scenario: Open book in modal
-    When I follow "Test book"
+    When I click on "Test book" "link" in the "region-main" "region"
     Then I should see "First chapter"
     And I follow "Next"
     And I should see "Second chapter"
 
   Scenario: Exit book modal
-    When I follow "Test book"
+    When I click on "Test book" "link" in the "region-main" "region"
     And I follow "Next"
     And I follow "Next"
     And I follow "Exit book"

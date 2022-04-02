@@ -73,8 +73,11 @@ class mod_url extends mod_page {
         $exturl = trim($url->externalurl);
         if (empty($exturl) or $exturl === 'http://') {
             url_print_header($url, $cm, $course);
-            url_print_heading($url, $cm, $course);
-            url_print_intro($url, $cm, $course);
+            if ($intro = url_get_intro($url, $cm, false)) {
+                echo $OUTPUT->box_start('mod_introbox', 'urlintro');
+                echo $intro;
+                echo $OUTPUT->box_end();
+            }
             notice(get_string('invalidstoredurl', 'url'), new moodle_url('/course/view.php', array(
                 'id' => $cm->course
             )));
@@ -144,11 +147,13 @@ class mod_url extends mod_page {
             $code = self::resourcelib_embed_general($fullurl, $title, $clicktoopen, $mimetype);
         }
 
-        url_print_heading($url, $cm, $course);
-
         echo $code;
 
-        url_print_intro($url, $cm, $course);
+        if ($intro = url_get_intro($url, $cm, false)) {
+            echo $OUTPUT->box_start('mod_introbox', 'urlintro');
+            echo $intro;
+            echo $OUTPUT->box_end();
+        }
     }
 
     /**

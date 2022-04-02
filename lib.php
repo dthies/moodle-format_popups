@@ -132,7 +132,7 @@ function format_popups_inplace_editable($itemtype, $itemid, $newvalue) {
  * @return string content
  */
 function format_popups_output_fragment_mod($args) {
-    global $OUTPUT, $USER;
+    global $OUTPUT, $PAGE, $USER;
 
     $context = $args['context'];
     $modname = clean_param($args['modname'], PARAM_COMPONENT);
@@ -167,8 +167,11 @@ function format_popups_output_fragment_mod($args) {
         $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
         $content = $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates) . $content;
     }
-    $course = course_get_format($course)->get_course();
-    if ($course->addnavigation) {
+    $format = course_get_format($course);
+    $course = $format->get_course();
+    $options = $format->get_format_options();
+    if (!empty(($options['addnavigation']))) {
+        $PAGE->set_pagelayout('frametop');
         $content .= $OUTPUT->activity_navigation();
     }
     return '<div>' . $content . '</div>';
@@ -201,14 +204,7 @@ function format_popups_output_fragment_page($args) {
 
     // Use best renderer method avaible.
     ob_start();
-    if (method_exists($format, 'get_output_classname')) {
-        if (!empty($displaysection)) {
-            $format->set_section_number($displaysection);
-        }
-        $outputclass = $format->get_output_classname('course_format');
-        $widget = new $outputclass($format);
-        echo $renderer->render($widget);
-    } else if (empty($displaysection)) {
+    if (empty($displaysection)) {
         $renderer->print_multiple_section_page($course, null, null, null, null);
     } else {
         $renderer->print_single_section_page($course, null, null, null, null, $displaysection);

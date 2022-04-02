@@ -22,8 +22,9 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot . '/course/format/topics/renderer.php');
+namespace format_popups\output;
+
+use core_courseformat\output\section_renderer;
 
 /**
  * Basic renderer for popup activities format.
@@ -31,5 +32,5 @@ require_once($CFG->dirroot . '/course/format/topics/renderer.php');
  * @copyright   2021 Daniel Thies <dethies@gmail.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_popups_renderer extends format_topics_renderer {
+class renderer extends \format_topics\output\renderer {
 }
