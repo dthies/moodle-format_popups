@@ -33,10 +33,15 @@ if ($hassiteconfig) {
             new lang_string('coursesettings', 'moodle'),
             ''
         ));
-        $settings->add(new admin_setting_configcheckbox(
-            'format_popups/addnavigation',
+        $settings->add(new admin_setting_configcheckbox( 'format_popups/addnavigation',
             new lang_string('addnavigation', 'format_popups'),
             new lang_string('addnavigation_help', 'format_popups'),
+            0
+        ));
+        $settings->add(new admin_setting_configcheckbox(
+            'format_popups/usecourseindex',
+            new lang_string('usecourseindex', 'format_popups'),
+            new lang_string('usecourseindex_help', 'format_popups'),
             0
         ));
     }

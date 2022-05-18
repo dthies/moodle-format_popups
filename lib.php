@@ -39,6 +39,18 @@ use core\output\inplace_editable;
 class format_popups extends format_topics {
 
     /**
+     * Returns true if this course format uses course index
+     *
+     * This function may be called without specifying the course id
+     * i.e. in course_index_drawer()
+     *
+     * @return bool
+     */
+    public function uses_course_index() {
+        return !empty(get_config('format_popups', 'usecourseindex'));;
+    }
+
+    /**
      * Definitions of the additional options that this course format uses for course.
      *
      * Topics format uses the following options:
@@ -63,7 +75,7 @@ class format_popups extends format_topics {
                 ],
                 'addnavigation' => [
                     'default' => get_config('format_popups', 'addnavigation'),
-                    'type' => PARAM_INT,
+                    'type' => PARAM_BOOL,
                 ],
             ];
         }

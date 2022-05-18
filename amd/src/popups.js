@@ -118,7 +118,7 @@ function registerListeners() {
         if (anchor && anchor.getAttribute('href')
             && !anchor.getAttribute('onclick')
             && anchor.getAttribute('href').match('http')
-            && anchor.closest('div.course-content, #format_popups_activity_content')
+            && anchor.closest('div.course-content, #format_popups_activity_content, #courseindex-content')
         ) {
             let url = new URL(anchor.getAttribute('href')),
                 id = url.searchParams.get('id');
