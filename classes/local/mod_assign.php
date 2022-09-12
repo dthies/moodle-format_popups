@@ -17,7 +17,7 @@
  /**
  * Activity renderer for Popups course format
  * extends classes from the core assign module
- * for rendering sctivity content within the popups
+ * for rendering SUBMIT, EDIT, and VIEW content in popups
  *
  * @package    format_popups
  * @copyright  2022 Manuel Mejia <manimejia.me@gmail.com>
