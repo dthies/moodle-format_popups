@@ -71,7 +71,7 @@ class mod_url extends mod_page {
         // Make sure URL exists before generating output - some older sites may contain empty urls
         // Do not use PARAM_URL here, it is too strict and does not support general URIs!
         $exturl = trim($url->externalurl);
-        if (empty($exturl) or $exturl === 'http://') {
+        if (empty($exturl) || $exturl === 'http://') {
             url_print_header($url, $cm, $course);
             if ($intro = url_get_intro($url, $cm, false)) {
                 echo $OUTPUT->box_start('mod_introbox', 'urlintro');

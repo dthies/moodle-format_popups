@@ -36,5 +36,5 @@ $string['privacy:metadata'] = 'The Pop up activities format plugin does not stor
 $string['section0name'] = 'General';
 $string['sectionname'] = 'Topic';
 $string['showfromothers'] = 'Show topic';
-$string['usecourseindex_help'] = 'Adds the Course index used in Topics format. Course index links are not opened in popups.';
+$string['usecourseindex_help'] = 'Add the Course index used in Topics format when all sections are displayed on one page. It will always be used when one section is showed per page.';
 $string['usecourseindex'] = 'Use Course index with format';

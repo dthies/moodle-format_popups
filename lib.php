@@ -47,7 +47,10 @@ class format_popups extends format_topics {
      * @return bool
      */
     public function uses_course_index() {
-        return !empty(get_config('format_popups', 'usecourseindex'));;
+        $course = $this->get_course();
+        return !empty(get_config('format_popups', 'usecourseindex'))
+            || isset($course->coursedisplay)
+            && $course->coursedisplay == COURSE_DISPLAY_MULTIPAGE;
     }
 
     /**
@@ -213,17 +216,13 @@ function format_popups_output_fragment_page($args) {
     $course = $format->get_course();
 
     $renderer = $PAGE->get_renderer('format_' . $format->get_format());
-
-    // Use best renderer method avaible.
-    ob_start();
-    if (empty($displaysection)) {
-        $renderer->print_multiple_section_page($course, null, null, null, null);
-    } else {
-        $renderer->print_single_section_page($course, null, null, null, null, $displaysection);
+    if (!empty($displaysection)) {
+        $format->set_section_number($displaysection);
     }
+    $outputclass = $format->get_output_classname('content');
+    $widget = new $outputclass($format);
 
-    $contents = ob_get_contents();
-    ob_end_clean();
+    $contents = $renderer->render($widget);
 
     // Trigger course viewed event.
     course_view(context_course::instance($course->id), $displaysection);

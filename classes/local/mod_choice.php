@@ -61,8 +61,8 @@ class mod_choice extends mod_page {
 
         list($choiceavailable, $warnings) = choice_get_availability_status($choice);
 
-        if (!empty($this->data->action) && $this->data->action == 'delchoice' and ($this->data->sesskey == sesskey())
-            and is_enrolled($this->context, null, 'mod/choice:choose') and $choice->allowupdate and $choiceavailable) {
+        if (!empty($this->data->action) && $this->data->action == 'delchoice' && ($this->data->sesskey == sesskey())
+            && is_enrolled($this->context, null, 'mod/choice:choose') && $choice->allowupdate && $choiceavailable) {
             $answercount = $DB->count_records('choice_answers', array('choiceid' => $choice->id, 'userid' => $USER->id));
             if ($answercount > 0) {
                 $choiceanswers = $DB->get_records('choice_answers', array('choiceid' => $choice->id, 'userid' => $USER->id),
@@ -108,7 +108,7 @@ class mod_choice extends mod_page {
 
             if ($answer && is_enrolled($this->context, null, 'mod/choice:choose')) {
                 choice_user_submit_response($answer, $choice, $USER->id, $course, $this->cm);
-            } else if (empty($answer) and $action === 'makechoice') {
+            } else if (empty($answer) && $action === 'makechoice') {
                 // We cannot use the 'makechoice' alone because there might be some legacy renderers without it,
                 // outdated renderers will not get the 'mustchoose' message - bad luck.
                 redirect(new moodle_url('/mod/choice/view.php',
@@ -189,7 +189,7 @@ class mod_choice extends mod_page {
             $choiceopen = false;
         }
 
-        if ( (!$current or $choice->allowupdate) and $choiceopen and is_enrolled($this->context, null, 'mod/choice:choose')) {
+        if ( (!$current || $choice->allowupdate) && $choiceopen && is_enrolled($this->context, null, 'mod/choice:choose')) {
 
             // Show information on how the results will be published to students.
             $publishinfo = null;
