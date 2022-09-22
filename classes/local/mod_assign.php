@@ -56,7 +56,7 @@ class mod_assign extends  mod_page {
     // register javascript file for inline AMD class loading
     $require_inline = json_encode(
         ['paths' =>['format_popups/assign' =>
-        '/course/format/videoepisodes/js/popups/assign']]);
+        '/course/format/popups/amd/inline/assign']]);
     $PAGE->requires->js_amd_inline('require.config('.$require_inline.')');
   }
 
