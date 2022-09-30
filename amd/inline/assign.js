@@ -82,7 +82,12 @@ define([
                 // TODO close modal
                 return;
             }
-            var jsondata = JSON.stringify(extractFormData(form,true));
+            var formdata = extractFormData(form,true);
+            // WORKAROUND : assignment submission data loss when using htmlspecialcharacters
+            // This is a bug where htmlspecialchars (< > &) typed in the AJAX form input
+            // result in ALL text aftrerward being deleted by moodle, prior to saving to database.
+            formdata = formdata.replace("&lt;","<").replace("&gt;",">").replace("&amp;","and");
+            var jsondata = JSON.stringify(formdata);
 
             Fragment.loadFragment(
                 'format_popups',
