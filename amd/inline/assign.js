@@ -43,22 +43,6 @@ define([
             data[key] = value;
             params += key + "=" + value + "&";
         });
-        // data = {},
-        // params = '';
-        // formdata.forEach((value, key) => {
-        //     // Reflect.has in favor of: object.hasOwnProperty(key)
-        //     if(!Reflect.has(data, key)){
-        //         data[key] = value;
-        //         params += key + "=" + data + "&";
-        //         return;
-        //     }
-        //     if(!Array.isArray(data[key])){
-        //         data[key] = [data[key]];
-        //         params += key + "=" + data;
-        //     }
-        //     data[key].push(value);
-        //     params += key + "=" + data;
-        // });
         if(asParams){
             return params;
             //return json_encode($data);
