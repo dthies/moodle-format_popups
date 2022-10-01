@@ -69,7 +69,7 @@ class mod_book extends mod_page {
         // Read chapters.
         $chapters = book_preload_chapters($book);
 
-        if ($allowedit and !$chapters) {
+        if ($allowedit && !$chapters) {
             redirect('edit.php?cmid='.$cm->id); // No chapters - add new one.
         }
         // Check chapterid and read chapter data.
@@ -95,7 +95,7 @@ class mod_book extends mod_page {
         if ((!$chapter = $DB->get_record('book_chapters', array(
             'id' => $chapterid,
             'bookid' => $book->id,
-        ))) or ($chapter->hidden and !$viewhidden)) {
+        ))) || ($chapter->hidden && !$viewhidden)) {
             throw new moodle_exception('errorchapter', 'book', $courseurl);
         }
 
