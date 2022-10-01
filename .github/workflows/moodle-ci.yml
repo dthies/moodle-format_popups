@@ -28,13 +28,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-            # Course formats are being redesigned in master so disable testing.
-            #- php: '8.0'
-            #moodle-branch: 'master'
-            #database: 'pgsql'
-            #- php: '8.0'
-            #moodle-branch: 'master'
-            #database: 'mariadb'
           - php: '8.0'
             moodle-branch: 'MOODLE_311_STABLE'
             database: 'mariadb'

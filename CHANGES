@@ -1,3 +1,7 @@
+1.0.11 Stop content playing in background
+
+1.0.10 Uses the new renderer when reloading course page
+
 1.0.9 Add settings to place previous and next links to modal
 
 1.0.8 Add SCORM landing form support new window setting

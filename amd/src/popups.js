@@ -118,7 +118,7 @@ function registerListeners() {
         if (anchor && anchor.getAttribute('href')
             && !anchor.getAttribute('onclick')
             && anchor.getAttribute('href').match('http')
-            && anchor.closest('div.course-content, #format_popups_activity_content')
+            && anchor.closest('div.course-content, #format_popups_activity_content, #courseindex-content')
         ) {
             let url = new URL(anchor.getAttribute('href')),
                 id = url.searchParams.get('id');
@@ -133,11 +133,6 @@ function registerListeners() {
                         e.preventDefault();
                         e.stopPropagation();
                         this.setTitle(module.title);
-                        templates.replaceNodeContents(
-                            '#format_popups_activity_content',
-                            '<div style="height: 275px;"></div>',
-                            ''
-                        );
                         Fragment.loadFragment(
                             'format_popups',
                             'mod',
@@ -248,6 +243,13 @@ function registerListeners() {
            this.hide();
         }
     }.bind(this));
+
+    this.getRoot().on(ModalEvents.hidden, templates.replaceNodeContents.bind(
+        templates,
+        '#format_popups_activity_content',
+        '<div style="height: 275px;"></div>',
+        ''
+    ));
 }
 
 /**
