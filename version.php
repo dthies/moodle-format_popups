@@ -28,6 +28,7 @@ $plugin->component = 'format_popups';
 $plugin->release = '1.0.11';
 $plugin->version = 2021052610;
 $plugin->requires = 2020061500;
+$plugin->incompatible = 400;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [
     'format_topics' => 2020061500,
