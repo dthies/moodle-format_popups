@@ -189,7 +189,9 @@ function registerListeners() {
     });
 
     // Navigation links within the course page.
-    document.querySelectorAll('#page-navbar, #nav-drawer, div.course-content').forEach(function(container) {
+    document.querySelectorAll(
+        '#page-navbar, #nav-drawer, div.course-content, #courseindex'
+    ).forEach(function(container) {
         container.addEventListener('click', function(e) {
             let anchor = e.target.closest('a') || e.target;
             if (anchor && anchor.getAttribute('href')) {
@@ -199,9 +201,9 @@ function registerListeners() {
                         params = url.searchParams;
                     if (!params.has('sesskey') && !href.includes('#') && params.get('id') === this.courseid) {
                         this.displaysection = params.get('section');
-                        updatePage.bind(this)();
                         e.preventDefault();
                         e.stopPropagation();
+                        updatePage.bind(this)();
                     }
                 }
             }
