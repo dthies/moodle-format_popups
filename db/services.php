@@ -35,4 +35,13 @@ $functions = [
         'ajax'          => true,
         'loginrequired' => true,
     ],
+
+    'format_popups_renew_token' => [
+        'classname' => '\\format_popups\\external\\renew_token',
+        'methodname' => 'execute',
+        'description' => 'Get new token to access message service',
+        'type' => 'read',
+        'ajax' => true,
+        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
+    ],
 ];

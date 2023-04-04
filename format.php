@@ -29,6 +29,14 @@ require($CFG->dirroot . '/course/format/topics/format.php');
 // The lines below include all the javascript added for this format. The code
 // can be added to other formats by copying these lines to that format's
 // format.php file and adding a dependency in version.php.
-$PAGE->requires->js_call_amd('format_popups/popups', 'init', array(
-    $context->id, $course->id, $displaysection
-));
+if (get_config('format_popups', 'enabledeftresponse')) {
+    $socket = new \format_popups\socket($context);
+    $token = $socket->get_token();
+    $PAGE->requires->js_call_amd('format_popups/deft', 'init', array(
+        $context->id, $course->id, $displaysection, $token, get_config('block_deft', 'throttle')
+    ));
+} else {
+    $PAGE->requires->js_call_amd('format_popups/popups', 'init', array(
+        $context->id, $course->id, $displaysection
+    ));
+}

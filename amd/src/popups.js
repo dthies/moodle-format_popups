@@ -30,6 +30,8 @@ import templates from 'core/templates';
 import loadChapter from 'format_popups/book';
 import resize from 'format_popups/embed';
 
+var root;
+
 /**
  * Initialize modal and listeners
  *
@@ -50,6 +52,7 @@ export const init = (contextid, courseid, displaysection) => {
         modal.displaysection = displaysection;
         modal.modules = [];
         modal.modulecount = document.querySelectorAll('.activity').length;
+        root = modal;
         registerListeners.bind(modal)();
 
         return Ajax.call([{
@@ -68,15 +71,15 @@ export const init = (contextid, courseid, displaysection) => {
 /**
  * Update activities on course page and optionally manual completion
  */
-function updatePage() {
+export const updatePage = function() {
     'use strict';
 
     Fragment.loadFragment(
         'format_popups',
         'page',
-        this.contextid,
+        root.contextid,
         {
-            displaysection: this.displaysection
+            displaysection: root.displaysection
         }
     ).then(function(html, js) {
         if (!html.length) {
@@ -96,14 +99,14 @@ function updatePage() {
     Ajax.call([{
         methodname: 'format_popups_get_available_mods',
         args: {
-            contextid: this.contextid
+            contextid: root.contextid
         },
         done: function(modules) {
-            this.modules = modules;
-        }.bind(this),
+            root.modules = modules;
+        },
         fail: notification.exception
     }]);
-}
+};
 
 /**
  * Register listeners for modal
@@ -278,14 +281,19 @@ function handleCompletion(e) {
 
             // This is not the fasted. but best code reuse.  First complete ajax request
             // for completion update ignoring result, then reload the page.
-            xhttp.onreadystatechange = function(modal) {
+            xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    updatePage.bind(modal)();
+                    updatePage();
                 }
-            }.bind(xhttp, this);
+            };
             xhttp.open('POST', form.getAttribute('action'), true);
             xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhttp.send(params.toString());
         }
     }
 }
+
+export default {
+    init: init,
+    updatePage: updatePage
+};

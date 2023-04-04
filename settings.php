@@ -27,7 +27,18 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
     if ($ADMIN->fulltree) {
-        // Define the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
+        $settings->add(new admin_setting_heading(
+            'format_popups/deftsettings',
+            new lang_string('deftsettings', 'format_popups'),
+            ''
+        ));
+        $link = '<a href="https://deftly.us" target="_blank">deftly.us</a>';
+        $settings->add(new admin_setting_configcheckbox( 'format_popups/enabledeftresponse',
+            new lang_string('enabledeftresponse', 'format_popups'),
+            new lang_string('enabledeftresponse_help', 'format_popups', $link),
+            0
+        ));
+
         $settings->add(new admin_setting_heading(
             'format_popups/defaults',
             new lang_string('coursesettings', 'moodle'),
