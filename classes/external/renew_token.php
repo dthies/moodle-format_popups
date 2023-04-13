@@ -18,11 +18,11 @@ namespace format_popups\external;
 
 use format_popups\socket;
 use context;
-use core_external\external_api;
-use core_external\external_function_parameters;
-use core_external\external_multiple_structure;
-use core_external\external_single_structure;
-use core_external\external_value;
+use external_api;
+use external_function_parameters;
+use external_multiple_structure;
+use external_single_structure;
+use external_value;
 
 /**
  * External function for getting new token
@@ -41,8 +41,8 @@ class renew_token extends \block_deft\external\renew_token {
      */
     public static function execute($contextid): array {
         $params = self::validate_parameters(self::execute_parameters(), [
-            'contextid' => $contextid, ]
-        );
+            'contextid' => $contextid,
+        ]);
         $contextid = $params['contextid'];
 
         $context = context::instance_by_id($contextid);

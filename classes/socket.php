@@ -47,11 +47,7 @@ class socket extends \block_deft\socket {
     public function validate() {
         if (
             $this->context->contextlevel != CONTEXT_COURSE
-        ) {
-            throw new moodle_exception('invalidcontext');
-        }
-        if (
-            get_course($this->context->get_course_context()->instanceid)->format != 'popups'
+            || !get_config('format_' . get_course($this->context->instanceid)->format, 'enabledeftresponse')
         ) {
             throw new moodle_exception('invalidcontext');
         }
