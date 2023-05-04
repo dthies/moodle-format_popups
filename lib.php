@@ -239,6 +239,7 @@ function format_popups_output_fragment_page($args) {
 function format_popups_mods_available($course) {
     $modinfo = get_fast_modinfo($course);
     $modules = array();
+    $context = context_course::instance($course->id);
     foreach ($modinfo->get_cms() as $cmid => $cminfo) {
         $class = '\\format_popups\\local\\mod_' . $cminfo->modname;
         if (
@@ -250,7 +251,7 @@ function format_popups_mods_available($course) {
                 'id' => $cmid,
                 'instance' => $cminfo->instance,
                 'modname' => $cminfo->modname,
-                'title' => $cminfo->name,
+                'title' => format_string($cminfo->name, true, ['context' => $context]),
             );
         }
     }
