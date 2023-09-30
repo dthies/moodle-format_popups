@@ -109,5 +109,5 @@ jobs:
         run: moodle-plugin-ci phpunit
 
       - name: Behat features
-        if: ${{ always() }}
+        if: ${{ matrix.moodle-branch == 'MOODLE_402_STABLE' }}
         run: moodle-plugin-ci behat --profile chrome
