@@ -43,8 +43,8 @@ class stateactions extends stateactions_base {
      * @param stateupdates $updates the affected course elements track
      * @param stdClass $course the course object
      * @param int[] $ids section ids (only ther first one will be highlighted)
-     * @param int $targetsectionid not used
-     * @param int $targetcmid not used
+     * @param int|null $targetsectionid not used
+     * @param int|null $targetcmid not used
      */
     public function section_highlight(
         stateupdates $updates,
@@ -88,8 +88,8 @@ class stateactions extends stateactions_base {
      * @param stateupdates $updates the affected course elements track
      * @param stdClass $course the course object
      * @param int[] $ids optional extra section ids to refresh
-     * @param int $targetsectionid not used
-     * @param int $targetcmid not used
+     * @param int|null $targetsectionid not used
+     * @param int|null $targetcmid not used
      */
     public function section_unhighlight(
         stateupdates $updates,

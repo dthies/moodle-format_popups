@@ -57,6 +57,39 @@ class mod_scorm extends mod_page {
         $contextmodule = $this->context;
         $scorm = $DB->get_record('scorm', array('id' => $this->cm->instance), '*', MUST_EXIST);
 
+        // Handle some settings that would cause redirect otherwise.
+        if (
+            !empty($this->data)
+            && !empty($this->data->newattempt)
+        ) {
+            $this->data->scoid = $scorm->launch;
+        } else if (
+            !empty($this->data) && empty($this->data->scoid)
+            && has_capability('mod/scorm:skipview', $contextmodule)
+            && ($scorm->skipview == SCORM_SKIPVIEW_ALWAYS || !scorm_has_tracks($scorm->id, $USER->id))
+        ) {
+            $orgidentifier = '';
+            $result = scorm_get_toc($USER, $scorm, $cm->id, TOCFULLURL, $orgidentifier);
+            if (
+                $scorm->forcenewattempt == SCORM_FORCEATTEMPT_ALWAYS
+                || ($result->incomplete === false && $scorm->forcenewattempt == SCORM_FORCEATTEMPT_ONCOMPLETE)
+            ) {
+
+                $this->data->scoid = $scorm->launch;
+            } else {
+
+                $scoes = $DB->get_records_select('scorm_scoes', 'scorm = ? AND '.
+                    $DB->sql_isnotempty('scorm_scoes', 'launch', false, true), array($scorm->id), 'sortorder, id', 'id');
+
+                if ($scoes) {
+                    $orgidentifier = '';
+                    if ($sco = scorm_get_sco($scorm->launch, SCO_ONLY)) {
+                        $this->data->scoid = $sco->id;
+                    }
+                }
+            }
+        }
+
         ob_start();
 
         if (!empty($this->data) && !empty($this->data->scoid)) {
@@ -93,6 +126,9 @@ class mod_scorm extends mod_page {
                 'sesskey' => sesskey(),
                 'display' => 'popup',
             ));
+            if (!empty($this->data->newattempt)) {
+                $url->param('newattempt', 'on');
+            }
             echo '<div><iframe id="format_popups_scorm_iframe" width="100%" height="' .  $scorm->height .
                 '" src="' . $url->out(false) . '"></iframe></div>';
 
