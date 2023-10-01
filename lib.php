@@ -160,6 +160,7 @@ function format_popups_output_fragment_mod($args) {
     }
 
     $path = key_exists('path', $args) ? json_decode($args['path']) : null;
+    $submitbutton = key_exists('submitbutton', $args) ? $args['submitbutton'] : null;
 
     $class = '\\format_popups\\local\\mod_' . $modname;
     if (!class_exists($class)) {
@@ -168,7 +169,7 @@ function format_popups_output_fragment_mod($args) {
     list ($course, $cm) = get_course_and_cm_from_cmid($context->instanceid, $modname);
     require_course_login($course, true, $cm);
 
-    $module = new $class($cm, $context, $course, $data, $path);
+    $module = new $class($cm, $context, $course, $data, $path, $submitbutton);
 
     $content = $module->render();
 

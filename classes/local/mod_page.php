@@ -51,6 +51,9 @@ class mod_page {
     /** @var object $data data for course module */
     protected $data = null;
 
+    /** @var object $submitbutton Button name on form */
+    protected $submitbutton = null;
+
     /**
      * Constructor
      *
@@ -59,8 +62,9 @@ class mod_page {
      * @param object $course course record
      * @param object $data search params
      * @param string $path requested file path
+     * @param string|null $submitbutton Button name for form submit
      */
-    public function __construct($cm, $context, $course, $data, $path) {
+    public function __construct($cm, $context, $course, $data, $path, $submitbutton = null) {
 
         $this->cm = $cm;
 
@@ -69,6 +73,8 @@ class mod_page {
         $this->context = $context;
 
         $this->path = $path;
+
+        $this->submitbutton = $submitbutton;
 
         $this->data = $data;
     }

@@ -57,7 +57,7 @@ export const init = (id, name) => {
 const handleSubmit = (e) => {
     'use strict';
     let form = e.target.closest('form');
-    if (form) {
+    if (form && e.target == form) {
         let formdata = new FormData(form),
             params = new URLSearchParams(formdata),
             data = params.toString();
@@ -75,7 +75,8 @@ const handleSubmit = (e) => {
             contextid,
             {
                 jsondata: JSON.stringify(data),
-                modname: modname
+                modname: modname,
+                submitbutton: e.submitter.name
             }
         ).then(
             templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
