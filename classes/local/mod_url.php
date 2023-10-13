@@ -54,7 +54,7 @@ class mod_url extends mod_page {
     public function render() {
         global $DB, $OUTPUT, $PAGE;
 
-        $url = $DB->get_record('url', array('id' => $this->cm->instance), '*', MUST_EXIST);
+        $url = $DB->get_record('url', ['id' => $this->cm->instance], '*', MUST_EXIST);
         $course = $this->course;
         $cm = $this->cm;
         $context = $this->context;
@@ -78,9 +78,9 @@ class mod_url extends mod_page {
                 echo $intro;
                 echo $OUTPUT->box_end();
             }
-            notice(get_string('invalidstoredurl', 'url'), new moodle_url('/course/view.php', array(
-                'id' => $cm->course
-            )));
+            notice(get_string('invalidstoredurl', 'url'), new moodle_url('/course/view.php', [
+                'id' => $cm->course,
+            ]));
             die;
         }
         unset($exturl);
@@ -90,14 +90,14 @@ class mod_url extends mod_page {
         switch ($displaytype) {
             case RESOURCELIB_DISPLAY_EMBED:
                 self::url_display_embed($url, $this->cm, $this->course);
-                $PAGE->requires->js_call_amd('format_popups/embed', 'init', array($this->context->id));
+                $PAGE->requires->js_call_amd('format_popups/embed', 'init', [$this->context->id]);
                 break;
             case RESOURCELIB_DISPLAY_FRAME:
-                echo $OUTPUT->render_from_template('format_popups/embedfile', array(
+                echo $OUTPUT->render_from_template('format_popups/embedfile', [
                     'filename' => $url->name,
                     'url' => $url->externalurl,
-                    'params' => array(array('name' => 'download', 'value' => 1)),
-                ));
+                    'params' => [['name' => 'download', 'value' => 1]],
+                ]);
                 break;
             default:
                 break;
@@ -123,19 +123,19 @@ class mod_url extends mod_page {
         $fullurl  = url_get_full_url($url, $cm, $course);
         $title    = $url->name;
 
-        $link = html_writer::tag('a', $fullurl, array('href' => str_replace('&amp;', '&', $fullurl)));
+        $link = html_writer::tag('a', $fullurl, ['href' => str_replace('&amp;', '&', $fullurl)]);
         $clicktoopen = get_string('clicktoopen', 'url', $link);
         $moodleurl = new moodle_url($fullurl);
 
         $extension = resourcelib_get_extension($url->externalurl);
 
         $mediamanager = core_media_manager::instance($PAGE);
-        $embedoptions = array(
+        $embedoptions = [
             core_media_manager::OPTION_TRUSTED => true,
-            core_media_manager::OPTION_BLOCK => true
-        );
+            core_media_manager::OPTION_BLOCK => true,
+        ];
 
-        if (in_array($mimetype, array('image/gif', 'image/jpeg', 'image/png'))) { // It's an image.
+        if (in_array($mimetype, ['image/gif', 'image/jpeg', 'image/png'])) { // It's an image.
             $code = resourcelib_embed_image($fullurl, $title);
 
         } else if ($mediamanager->can_embed_url($moodleurl, $embedoptions)) {

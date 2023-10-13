@@ -56,7 +56,7 @@ class mod_book extends mod_page {
         $cm = $this->cm;
         $course = $this->course;
         $context = $this->context;
-        $book = $DB->get_record('book', array('id' => $this->cm->instance), '*', MUST_EXIST);
+        $book = $DB->get_record('book', ['id' => $this->cm->instance], '*', MUST_EXIST);
         $chapterid = empty($this->data->chapterid) ? 0 : $this->data->chapterid;
 
         ob_start();
@@ -89,13 +89,13 @@ class mod_book extends mod_page {
             }
         }
 
-        $courseurl = new moodle_url('/course/view.php', array('id' => $course->id));
+        $courseurl = new moodle_url('/course/view.php', ['id' => $course->id]);
 
         // Chapter doesnt exist or it is hidden for students.
-        if ((!$chapter = $DB->get_record('book_chapters', array(
+        if ((!$chapter = $DB->get_record('book_chapters', [
             'id' => $chapterid,
             'bookid' => $book->id,
-        ))) || ($chapter->hidden && !$viewhidden)) {
+        ])) || ($chapter->hidden && !$viewhidden)) {
             throw new moodle_exception('errorchapter', 'book', $courseurl);
         }
 
@@ -160,7 +160,7 @@ class mod_book extends mod_page {
                 }
             } else {
                 $navexit = get_string('navexit', 'book');
-                $sec = $DB->get_field('course_sections', 'section', array('id' => $cm->section));
+                $sec = $DB->get_field('course_sections', 'section', ['id' => $cm->section]);
                 $returnurl = course_get_url($course, $sec);
                 if ($book->navstyle == 1) {
                     $chnavigation .= '<a title="' . $navexit . '" class="bookexit"  data-action="hide" href="'.$returnurl.'">' .
@@ -221,11 +221,11 @@ class mod_book extends mod_page {
             'chapter',
             $chapter->id
         );
-        echo format_text($chaptertext, $chapter->contentformat, array(
+        echo format_text($chaptertext, $chapter->contentformat, [
             'noclean' => true,
             'overflowdiv' => true,
             'context' => $context,
-        ));
+        ]);
 
         echo $OUTPUT->box_end();
 
@@ -242,7 +242,7 @@ class mod_book extends mod_page {
         $contents = ob_get_contents();
         ob_end_clean();
 
-        $PAGE->requires->js_call_amd('format_popups/book', 'init', array($context->id));
+        $PAGE->requires->js_call_amd('format_popups/book', 'init', [$context->id]);
 
         return $contents;
     }

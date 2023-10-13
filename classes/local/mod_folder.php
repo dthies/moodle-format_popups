@@ -51,14 +51,14 @@ class mod_folder extends mod_page {
     public function render() {
         global $DB, $PAGE;
 
-        $folder = $DB->get_record('folder', array('id' => $this->cm->instance), '*', MUST_EXIST);
+        $folder = $DB->get_record('folder', ['id' => $this->cm->instance], '*', MUST_EXIST);
         $course = $this->course;
         require_capability('mod/folder:view', $this->context);
 
-        $params = array(
+        $params = [
             'context' => $this->context,
-            'objectid' => $folder->id
-        );
+            'objectid' => $folder->id,
+        ];
         $event = \mod_folder\event\course_module_viewed::create($params);
         $event->add_record_snapshot('course_modules', $this->cm);
         $event->add_record_snapshot('course', $course);
@@ -70,7 +70,7 @@ class mod_folder extends mod_page {
         $completion->set_module_viewed($this->cm);
 
         $output = $PAGE->get_renderer('mod_folder');
-        $PAGE->requires->js_call_amd('format_popups/folder', 'init', array($this->context->id, $this->cm->id));
+        $PAGE->requires->js_call_amd('format_popups/folder', 'init', [$this->context->id, $this->cm->id]);
 
         return $output->display_folder($folder);
     }

@@ -98,7 +98,7 @@ class format_popups extends format_topics {
                     'element_attributes' => [
                         [
                             0 => new lang_string('hiddensectionscollapsed'),
-                            1 => new lang_string('hiddensectionsinvisible')
+                            1 => new lang_string('hiddensectionsinvisible'),
                         ],
                     ],
                 ],
@@ -152,7 +152,7 @@ function format_popups_output_fragment_mod($args) {
     $context = $args['context'];
     $modname = clean_param($args['modname'], PARAM_COMPONENT);
     if (key_exists('jsondata', $args)) {
-        $data = array();
+        $data = [];
         parse_str(json_decode($args['jsondata']), $data);
         $data = (object) $data;
     } else {
@@ -170,6 +170,9 @@ function format_popups_output_fragment_mod($args) {
     require_course_login($course, true, $cm);
 
     $module = new $class($cm, $context, $course, $data, $path, $submitbutton);
+
+    // Prevent the glossary autolinker loading multiple times.
+    $PAGE->requires->should_create_one_time_item_now('filter_glossary_autolinker');
 
     $content = $module->render();
 
@@ -239,7 +242,7 @@ function format_popups_output_fragment_page($args) {
  */
 function format_popups_mods_available($course) {
     $modinfo = get_fast_modinfo($course);
-    $modules = array();
+    $modules = [];
     $context = context_course::instance($course->id);
     foreach ($modinfo->get_cms() as $cmid => $cminfo) {
         $class = '\\format_popups\\local\\mod_' . $cminfo->modname;
@@ -247,13 +250,13 @@ function format_popups_mods_available($course) {
             class_exists($class) &&
             has_capability('format/popups:view', context_module::instance($cmid))
         ) {
-            $modules[] = (object) array(
+            $modules[] = (object) [
                 'contextid' => $cminfo->context->id,
                 'id' => $cmid,
                 'instance' => $cminfo->instance,
                 'modname' => $cminfo->modname,
                 'title' => format_string($cminfo->name, true, ['context' => $context]),
-            );
+            ];
         }
     }
     return $modules;

@@ -58,7 +58,7 @@ class mod_contentdesigner extends mod_page {
 
         $context = $this->context;
 
-        if (!$data = $DB->get_record('contentdesigner', array('id' => $this->cm->instance))) {
+        if (!$data = $DB->get_record('contentdesigner', ['id' => $this->cm->instance])) {
             throw new moodle_exception('course module is incorrect');
         }
 
