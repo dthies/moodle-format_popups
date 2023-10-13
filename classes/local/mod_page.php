@@ -87,7 +87,7 @@ class mod_page {
     public function render() {
         global $DB;
 
-        $page = $DB->get_record('page', array('id' => $this->cm->instance), '*', MUST_EXIST);
+        $page = $DB->get_record('page', ['id' => $this->cm->instance], '*', MUST_EXIST);
         require_capability('mod/page:view', $this->context);
         // Completion and trigger events.
         page_view($page, $this->course, $this->cm, $this->context);

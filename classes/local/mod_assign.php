@@ -18,8 +18,9 @@
  * Activity renderer Popups course format
  *
  * @package    format_popups
- * @copyright  2021 Daniel Thies <dethies@gmail.com>
+ * @copyright  2023 Daniel Thies <dethies@gmail.com>
  *             adapted from Moodle mod_assign
+ *             base on work by Manuel Mejia <manimejia.me@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,7 +29,8 @@ namespace format_popups\local;
 defined('MOODLE_INTERNAL') || die();
 
 use assign_form;
-use mod_assign\output\assign_header;
+use assign_header;
+use assign_plugin_header;
 use assign as assign_base;
 use context_user;
 use core_user;
@@ -58,7 +60,7 @@ class mod_assign extends mod_page {
      * @return string page contents
      */
     public function render() {
-        global $DB, $OUTPUT, $PAGE;
+        global $DB, $OUTPUT, $PAGE, $USER;
         $cm = $this->cm;
         $course = $this->course;
         $context = $this->context;
@@ -72,7 +74,7 @@ class mod_assign extends mod_page {
         ) {
             switch ($this->data->action) {
                 case 'editsubmission':
-                    $PAGE->requires->js_call_amd('format_popups/form', 'init', array($this->context->id, $this->cm->modname));
+                    $PAGE->requires->js_call_amd('format_popups/form', 'init', [$this->context->id, $this->cm->modname]);
                     return $this->assign->view_edit_submission_page($mform, $notices);
                     break;
                 case 'removesubmission':
@@ -102,7 +104,7 @@ class mod_assign extends mod_page {
         // Apply overrides.
         $this->assign->update_effective_access($USER->id);
 
-        $PAGE->requires->js_call_amd('format_popups/form', 'init', array($this->context->id, $this->cm->modname));
+        $PAGE->requires->js_call_amd('format_popups/form', 'init', [$this->context->id, $this->cm->modname]);
 
         // Get the assign class to render the page.
         return $this->assign->view_submission_page();
@@ -130,6 +132,38 @@ class assign extends assign_base {
         $postfix = '';
         if ($this->has_visible_attachments() && (!$this->get_instance($USER->id)->submissionattachments)) {
             $postfix = $this->render_area_files('mod_assign', ASSIGN_INTROATTACHMENT_FILEAREA, 0);
+        }
+        $header = new assign_header(
+            $instance,
+            $this->get_context(),
+            $this->show_intro(),
+            $this->get_course_module()->id,
+            '',
+            '',
+            $postfix
+        );
+
+        // We just want description for header.
+        $description = $header->preface;
+        if ($header->showintro || $header->activity) {
+            $description = $this->get_renderer()->box_start('generalbox boxaligncenter');
+            if ($header->showintro) {
+                $description .= format_module_intro('assign', $header->assign, $header->coursemoduleid);
+            }
+            if ($header->activity) {
+                $description .= $this->format_activity_text($header->assign, $header->coursemoduleid);
+            }
+            $description .= $header->postfix;
+            $description .= $this->get_renderer()->box_end();
+        }
+        $o .= $description;
+
+        // Display plugin specific headers.
+        $plugins = array_merge($this->get_submission_plugins(), $this->get_feedback_plugins());
+        foreach ($plugins as $plugin) {
+            if ($plugin->is_enabled() && $plugin->is_visible()) {
+                $o .= $this->get_renderer()->render(new assign_plugin_header($plugin));
+            }
         }
 
         if ($this->can_view_grades()) {
@@ -175,7 +209,7 @@ class assign extends assign_base {
 
         $data = new stdClass();
         $data->userid = $userid;
-        $mform = new mod_assign_submission_form(null, array($this, $data));
+        $mform = new mod_assign_submission_form(null, [$this, $data]);
         if ($this->data) {
             return $this->save_submission($this->data, $notices);
         }
@@ -210,7 +244,7 @@ class assign extends assign_base {
 
         // This variation on the url will link direct to this student.
         // The benefit is the url will be the same every time for this student, so Atto autosave drafts can match up.
-        $returnparams = array('userid' => $userid, 'rownum' => 0, 'useridlistid' => 0);
+        $returnparams = ['userid' => $userid, 'rownum' => 0, 'useridlistid' => 0];
         $this->register_return_link('editsubmission', $returnparams);
 
         if ($userid == $USER->id) {
@@ -231,7 +265,7 @@ class assign extends assign_base {
         }
 
         if (!$this->submissions_open($userid)) {
-            $message = array(get_string('submissionsclosed', 'assign'));
+            $message = [get_string('submissionsclosed', 'assign')];
             return $this->view_notices($title, $message);
         }
 
@@ -243,7 +277,7 @@ class assign extends assign_base {
         $data = new stdClass();
         $data->userid = $userid;
         if (!$mform) {
-            $mform = new mod_assign_submission_form(new moodle_url('/mod/assign/view.php'), array($this, $data));
+            $mform = new mod_assign_submission_form(new moodle_url('/mod/assign/view.php'), [$this, $data]);
         }
 
         if ($this->get_instance()->teamsubmission) {
@@ -295,14 +329,18 @@ class assign extends assign_base {
 
         $o = '';
 
-        $urlparams = array('id' => $this->get_course_module()->id,
-                           'action' => 'removesubmission',
-                           'userid' => $userid,
-                           'sesskey' => sesskey());
+        $urlparams = [
+            'id' => $this->get_course_module()->id,
+            'action' => 'removesubmission',
+            'userid' => $userid,
+            'sesskey' => sesskey(),
+        ];
         $confirmurl = new moodle_url('/mod/assign/view.php', $urlparams);
 
-        $urlparams = array('id' => $this->get_course_module()->id,
-                           'action' => 'view');
+        $urlparams = [
+            'id' => $this->get_course_module()->id,
+            'action' => 'view',
+        ];
         $cancelurl = new moodle_url('/mod/assign/view.php', $urlparams);
 
         if ($userid == $USER->id) {

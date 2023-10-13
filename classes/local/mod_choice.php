@@ -53,7 +53,7 @@ class mod_choice extends mod_page {
     public function render() {
         global $CFG, $DB, $OUTPUT, $PAGE, $SESSION, $USER;
 
-        $course = $DB->get_record('course', array('id' => $this->cm->course), '*', MUST_EXIST);
+        $course = $DB->get_record('course', ['id' => $this->cm->course], '*', MUST_EXIST);
 
         if (!$choice = choice_get_choice($this->cm->instance)) {
             throw new moodle_exception('invalidcoursemodule', 'choice');
@@ -63,9 +63,9 @@ class mod_choice extends mod_page {
 
         if (!empty($this->data->action) && $this->data->action == 'delchoice' && ($this->data->sesskey == sesskey())
             && is_enrolled($this->context, null, 'mod/choice:choose') && $choice->allowupdate && $choiceavailable) {
-            $answercount = $DB->count_records('choice_answers', array('choiceid' => $choice->id, 'userid' => $USER->id));
+            $answercount = $DB->count_records('choice_answers', ['choiceid' => $choice->id, 'userid' => $USER->id]);
             if ($answercount > 0) {
-                $choiceanswers = $DB->get_records('choice_answers', array('choiceid' => $choice->id, 'userid' => $USER->id),
+                $choiceanswers = $DB->get_records('choice_answers', ['choiceid' => $choice->id, 'userid' => $USER->id],
                     '', 'id');
                 $todelete = array_keys($choiceanswers);
                 choice_delete_responses($todelete, $choice, $this->cm, $course);
@@ -112,14 +112,14 @@ class mod_choice extends mod_page {
                 // We cannot use the 'makechoice' alone because there might be some legacy renderers without it,
                 // outdated renderers will not get the 'mustchoose' message - bad luck.
                 redirect(new moodle_url('/mod/choice/view.php',
-                    array('id' => $this->cm->id, 'notify' => 'mustchooseone', 'sesskey' => sesskey())));
+                    ['id' => $this->cm->id, 'notify' => 'mustchooseone', 'sesskey' => sesskey()]));
             }
         }
 
         choice_view($choice, $course, $this->cm, $this->context);
 
         // Display the choice and possibly results.
-        $eventdata = array();
+        $eventdata = [];
         $eventdata['objectid'] = $choice->id;
         $eventdata['context'] = $this->context;
 
@@ -163,7 +163,7 @@ class mod_choice extends mod_page {
         // or if choice is not open, show their selected answer.
         if (isloggedin() && (!empty($current)) &&
             (empty($choice->allowupdate) || ($timenow > $choice->timeclose)) ) {
-            $choicetexts = array();
+            $choicetexts = [];
             foreach ($current as $c) {
                 $choicetexts[] = format_string(choice_get_option_text($choice, $c->optionid));
             }
@@ -238,21 +238,21 @@ class mod_choice extends mod_page {
             if (isguestuser()) {
                 // Guest account.
                 $content .= $OUTPUT->confirm(get_string('noguestchoose', 'choice').'<br /><br />'.get_string('liketologin'),
-                             get_login_url(), new moodle_url('/course/view.php', array('id' => $course->id)));
+                             get_login_url(), new moodle_url('/course/view.php', ['id' => $course->id]));
             } else if (!is_enrolled($this->context)) {
                 // Only people enrolled can make a choice.
                 $SESSION->wantsurl = qualified_me();
                 $SESSION->enrolcancel = get_local_referer(false);
 
                 $coursecontext = context_course::instance($course->id);
-                $courseshortname = format_string($course->shortname, true, array('context' => $coursecontext));
+                $courseshortname = format_string($course->shortname, true, ['context' => $coursecontext]);
 
                 $content .= $OUTPUT->box_start('generalbox', 'notice');
                 $content .= '<p align="center">'. get_string('notenrolledchoose', 'choice') .'</p>';
                 $content .= $OUTPUT->container_start('continuebutton');
-                $content .= $OUTPUT->single_button(new moodle_url('/enrol/index.php?', array(
+                $content .= $OUTPUT->single_button(new moodle_url('/enrol/index.php?', [
                     'id' => $course->id,
-                )), get_string('enrolme', 'core_enrol', $courseshortname));
+                ]), get_string('enrolme', 'core_enrol', $courseshortname));
                 $content .= $OUTPUT->container_end();
                 $content .= $OUTPUT->box_end();
 
@@ -270,8 +270,8 @@ class mod_choice extends mod_page {
             $content .= $OUTPUT->box(get_string('noresultsviewable', 'choice'));
         }
 
-        $PAGE->requires->js_call_amd('format_popups/form', 'init', array($this->context->id, $this->cm->modname));
-        $PAGE->requires->js_call_amd('format_popups/choice', 'init', array($this->context->id, $this->cm->modname));
+        $PAGE->requires->js_call_amd('format_popups/form', 'init', [$this->context->id, $this->cm->modname]);
+        $PAGE->requires->js_call_amd('format_popups/choice', 'init', [$this->context->id, $this->cm->modname]);
 
         return $content;
     }

@@ -42,6 +42,6 @@ $functions = [
         'description' => 'Get new token to access message service',
         'type' => 'read',
         'ajax' => true,
-        'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
+        'services' => [MOODLE_OFFICIAL_MOBILE_SERVICE],
     ],
 ];

@@ -55,7 +55,7 @@ class mod_scorm extends mod_page {
         $cm = $this->cm;
         $course = $this->course;
         $contextmodule = $this->context;
-        $scorm = $DB->get_record('scorm', array('id' => $this->cm->instance), '*', MUST_EXIST);
+        $scorm = $DB->get_record('scorm', ['id' => $this->cm->instance], '*', MUST_EXIST);
 
         // Handle some settings that would cause redirect otherwise.
         if (
@@ -79,7 +79,7 @@ class mod_scorm extends mod_page {
             } else {
 
                 $scoes = $DB->get_records_select('scorm_scoes', 'scorm = ? AND '.
-                    $DB->sql_isnotempty('scorm_scoes', 'launch', false, true), array($scorm->id), 'sortorder, id', 'id');
+                    $DB->sql_isnotempty('scorm_scoes', 'launch', false, true), [$scorm->id], 'sortorder, id', 'id');
 
                 if ($scoes) {
                     $orgidentifier = '';
@@ -101,16 +101,18 @@ class mod_scorm extends mod_page {
                 }
                 $name = 'scorm_'.$name;
                 echo html_writer::script('', $CFG->wwwroot.'/mod/scorm/player.js');
-                $url = new moodle_url('/mod/scorm/player.php', array(
+                $url = new moodle_url('/mod/scorm/player.php', [
                     'cm' => $this->cm->id,
                     'scoid' => $this->data->scoid,
                     'display' => 'popup',
                     'mode' => $this->data->mode ?? 'normal',
-                ));
+                ]);
                 echo html_writer::script(
-                    js_writer::function_call('scorm_openpopup', Array($url->out(false),
-                                                       $name, $scorm->options,
-                                                       $scorm->width, $scorm->height)));
+                    js_writer::function_call('scorm_openpopup', [
+                        $url->out(false),
+                        $name, $scorm->options,
+                        $scorm->width, $scorm->height,
+                    ]));
                     $contents = ob_get_contents();
                     ob_end_clean();
 
@@ -119,13 +121,13 @@ class mod_scorm extends mod_page {
                     ');
                     return $contents;
             }
-            $url = new moodle_url("/mod/scorm/player.php", array(
+            $url = new moodle_url("/mod/scorm/player.php", [
                 'a' => $this->cm->instance,
                 'currentorg' => $this->data->currentorg,
                 'scoid' => $this->data->sco,
                 'sesskey' => sesskey(),
                 'display' => 'popup',
-            ));
+            ]);
             if (!empty($this->data->newattempt)) {
                 $url->param('newattempt', 'on');
             }
@@ -135,7 +137,7 @@ class mod_scorm extends mod_page {
             $contents = ob_get_contents();
             ob_end_clean();
 
-            $PAGE->requires->js_call_amd('format_popups/scorm', 'init', array());
+            $PAGE->requires->js_call_amd('format_popups/scorm', 'init', []);
 
             return $contents;
         }
@@ -206,7 +208,7 @@ class mod_scorm extends mod_page {
         $contents = ob_get_contents();
         ob_end_clean();
 
-        $PAGE->requires->js_call_amd('format_popups/form', 'init', array($this->context->id, $this->cm->modname));
+        $PAGE->requires->js_call_amd('format_popups/form', 'init', [$this->context->id, $this->cm->modname]);
 
         return $contents;
     }

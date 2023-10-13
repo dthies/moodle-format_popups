@@ -55,18 +55,18 @@ class mod_customcert extends mod_url {
 
         require_capability('mod/customcert:view', $this->context);
 
-        $url = new moodle_url('/mod/customcert/view.php', array(
+        $url = new moodle_url('/mod/customcert/view.php', [
             'id' => $this->cm->id,
             'downloadown' => 1,
-        ));
+        ]);
 
-        return $OUTPUT->render_from_template('format_popups/embedfile', array(
+        return $OUTPUT->render_from_template('format_popups/embedfile', [
             'downloadurl' => $url->out(false),
             'url' => $url->out(false),
-            'params' => array(
-                array('name' => 'id', 'value'  => $this->cm->id),
-                array('name' => 'downloadown', 'value'  => 1),
-            ),
-        ));
+            'params' => [
+                ['name' => 'id', 'value'  => $this->cm->id],
+                ['name' => 'downloadown', 'value'  => 1],
+            ],
+        ]);
     }
 }
