@@ -52,22 +52,22 @@ class mod_poster extends mod_page {
 
         $course = $this->course;
         $cm = $this->cm;
-        $poster = $DB->get_record('poster', array('id' => $this->cm->instance), '*', MUST_EXIST);
+        $poster = $DB->get_record('poster', ['id' => $this->cm->instance], '*', MUST_EXIST);
         require_capability('mod/poster:view', $this->context);
 
         // Need to add block areas, but can not do it on existing page.
         $page = new \moodle_page();
         $page->set_cm($this->cm);
         $page->set_context($this->context);
-        $page->set_url('/mod/poster/view.php', array('id' => $cm->id));
+        $page->set_url('/mod/poster/view.php', ['id' => $cm->id]);
         $page->set_title($course->shortname.': '.$poster->name);
         $page->set_heading($course->fullname);
         $page->set_activity_record($poster);
         // Trigger module viewed event.
-        $event = \mod_poster\event\course_module_viewed::create(array(
+        $event = \mod_poster\event\course_module_viewed::create([
            'objectid' => $poster->id,
            'context' => $this->context,
-        ));
+        ]);
         $event->add_record_snapshot('course_modules', $cm);
         $event->add_record_snapshot('course', $course);
         $event->add_record_snapshot('poster', $poster);

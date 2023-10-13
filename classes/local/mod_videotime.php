@@ -46,7 +46,7 @@ class mod_videotime extends mod_page {
     public function render() {
         global $DB, $OUTPUT, $PAGE;
 
-        $moduleinstance = $DB->get_record('videotime', array('id' => $this->cm->instance), '*', MUST_EXIST);
+        $moduleinstance = $DB->get_record('videotime', ['id' => $this->cm->instance], '*', MUST_EXIST);
         $moduleinstance = videotime_instance::instance_by_id($moduleinstance->id);
         require_capability('mod/videotime:view', $this->context);
 

@@ -124,7 +124,7 @@ class mod_etherpadlite extends mod_page {
         // Display the etherpadlite and possibly results.
         $eventparams = [
             'context' => $context,
-            'objectid' => $etherpadlite->id
+            'objectid' => $etherpadlite->id,
         ];
         $event = \mod_etherpadlite\event\course_module_viewed::create($eventparams);
         $event->add_record_snapshot('course_modules', $cm);

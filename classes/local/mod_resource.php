@@ -53,7 +53,7 @@ class mod_resource extends mod_url {
     public function render() {
         global $DB, $OUTPUT, $PAGE;
 
-        $resource = $DB->get_record('resource', array('id' => $this->cm->instance), '*', MUST_EXIST);
+        $resource = $DB->get_record('resource', ['id' => $this->cm->instance], '*', MUST_EXIST);
         $course = $this->course;
         require_capability('mod/resource:view', $this->context);
 
@@ -89,15 +89,15 @@ class mod_resource extends mod_url {
         $extension = resourcelib_get_extension($file->get_filename());
 
         $mediamanager = core_media_manager::instance($PAGE);
-        $embedoptions = array(
+        $embedoptions = [
             core_media_manager::OPTION_TRUSTED => true,
             core_media_manager::OPTION_BLOCK => true,
-        );
+        ];
 
         if (file_mimetype_in_typegroup($mimetype, 'web_image')) {
             // It's an image.
             $code = resourcelib_embed_image($moodleurl->out(), $title);
-            $PAGE->requires->js_call_amd('format_popups/embed', 'init', array($this->context->id));
+            $PAGE->requires->js_call_amd('format_popups/embed', 'init', [$this->context->id]);
 
         } else if ($mimetype === 'application/pdf') {
             // PDF document.
@@ -107,22 +107,22 @@ class mod_resource extends mod_url {
             // Media (audio/video) file.
             $code = $mediamanager->embed_url($moodleurl, $title, 0, 0, $embedoptions);
 
-        } else if (in_array((int) $resource->display, array(
+        } else if (in_array((int) $resource->display, [
             RESOURCELIB_DISPLAY_EMBED,
             RESOURCELIB_DISPLAY_OPEN,
             RESOURCELIB_DISPLAY_POPUP,
-        ))) {
+        ])) {
             self::resource_display_embed($resource, $this->cm, $this->course, $file);
-            $PAGE->requires->js_call_amd('format_popups/embed', 'init', array($this->context->id));
+            $PAGE->requires->js_call_amd('format_popups/embed', 'init', [$this->context->id]);
             $code = '';
 
         } else {
             // Anything else ask to download.
             $moodleurl->param('forcedownload', 1);
-            $code = $OUTPUT->render_from_template('format_popups/filedownload', array(
+            $code = $OUTPUT->render_from_template('format_popups/filedownload', [
                 'filename' => $file->get_filename(),
                 'url' => $moodleurl->out(),
-            ));
+            ]);
         }
 
         echo $code;
@@ -155,10 +155,10 @@ class mod_resource extends mod_url {
         $extension = resourcelib_get_extension($file->get_filename());
 
         $mediamanager = core_media_manager::instance($PAGE);
-        $embedoptions = array(
+        $embedoptions = [
             core_media_manager::OPTION_TRUSTED => true,
             core_media_manager::OPTION_BLOCK => true,
-        );
+        ];
 
         if (file_mimetype_in_typegroup($mimetype, 'web_image')) {  // It's an image.
             $code = resourcelib_embed_image($moodleurl->out(), $title);

@@ -108,9 +108,9 @@ class mod_h5pactivity extends mod_page {
 
         $content .= player::display($fileurl, $config, true, 'mod_h5pactivity');
 
-        $PAGE->requires->js_call_amd('format_popups/h5pactivity', 'init', array(
-            $this->context->id, 'h5pactivity', $moduleinstance->id
-        ));
+        $PAGE->requires->js_call_amd('format_popups/h5pactivity', 'init', [
+            $this->context->id, 'h5pactivity', $moduleinstance->id,
+        ]);
 
         return $content;
     }
