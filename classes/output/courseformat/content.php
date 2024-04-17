@@ -24,7 +24,10 @@
 
 namespace format_popups\output\courseformat;
 
+use context_course;
 use core_courseformat\output\local\content as content_base;
+use format_popups\socket;
+use renderer_base;
 
 /**
  * Base class to render a course content.
@@ -34,4 +37,30 @@ use core_courseformat\output\local\content as content_base;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class content extends \format_topics\output\courseformat\content {
+    /**
+     * Export this data so it can be used as the context for a mustache template (core/inplace_editable).
+     *
+     * @param renderer_base $output typically, the renderer that's calling this function
+     * @return stdClass data context for a mustache template
+     */
+    public function export_for_template(renderer_base $output) {
+        global $PAGE;
+        $course = $this->format->get_course();
+        $context = context_course::instance($course->id);
+        $displaysection = $this->format->get_sectionid();
+
+        if (get_config('format_popups', 'enabledeftresponse')) {
+            $socket = new socket($context);
+            $token = $socket->get_token();
+            $PAGE->requires->js_call_amd('format_popups/deft', 'init', [
+                $context->id, $course->id, $displaysection, $token, get_config('block_deft', 'throttle'),
+            ]);
+        } else {
+            $PAGE->requires->js_call_amd('format_popups/popups', 'init', [
+                $context->id, $course->id, $displaysection,
+            ]);
+        }
+
+        return parent::export_for_template($output);
+    }
 }

@@ -26,17 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require($CFG->dirroot . '/course/format/topics/format.php');
 
-// The lines below include all the javascript added for this format. The code
-// can be added to other formats by copying these lines to that format's
-// format.php file and adding a dependency in version.php.
-if (get_config('format_popups', 'enabledeftresponse')) {
-    $socket = new \format_popups\socket($context);
-    $token = $socket->get_token();
-    $PAGE->requires->js_call_amd('format_popups/deft', 'init', [
-        $context->id, $course->id, $displaysection, $token, get_config('block_deft', 'throttle'),
-    ]);
-} else {
-    $PAGE->requires->js_call_amd('format_popups/popups', 'init', [
-        $context->id, $course->id, $displaysection,
-    ]);
-}
+// The additional javascript added for this format is not included by the
+// section content renderer. To add this functionality to another format
+// you should extend format_popups\output\courseformat\content class in
+// the new format and add a dependency in version.php to this format.

@@ -42,6 +42,10 @@ var root;
 export const init = (contextid, courseid, displaysection) => {
     'use strict';
 
+    if (root) {
+        return;
+    }
+
     ModalFactory.create({
         large: true,
         title: 'title',
@@ -65,7 +69,7 @@ export const init = (contextid, courseid, displaysection) => {
             }.bind(modal),
             fail: notification.exception
         }]);
-    }).fail(notification.exception);
+    }).catch(notification.exception);
 };
 
 /**
@@ -193,22 +197,27 @@ function registerListeners() {
 
     // Navigation links within the course page.
     document.querySelectorAll(
-        '#page-navbar, #nav-drawer, div.course-content, #courseindex'
+        '#secondary-navigation, #nav-drawer, div.course-content, #courseindex'
     ).forEach(function(container) {
         container.addEventListener('click', function(e) {
-            let anchor = e.target.closest('a') || e.target;
+            const anchor = e.target.closest('a') || e.target;
             if (anchor && anchor.getAttribute('href')) {
-                let href = anchor.getAttribute('href');
+                const href = anchor.getAttribute('href'),
+                    url = new URL(href),
+                    params = url.searchParams;
                 if (href.search(config.wwwroot + '/course/view.php') === 0) {
-                    let url = new URL(href),
-                        params = url.searchParams;
                     if (!params.has('sesskey') && !href.includes('#') && params.get('id') === this.courseid) {
                         this.displaysection = params.get('section');
-                        e.preventDefault();
-                        e.stopPropagation();
-                        updatePage.bind(this)();
                     }
+                } else if (href.search(config.wwwroot + '/course/section.php') === 0) {
+                    this.displaysection = params.get('id');
+                } else {
+                    return;
                 }
+                e.preventDefault();
+                e.stopPropagation();
+                window.history.pushState({}, null, url);
+                updatePage.bind(this)();
             }
         }.bind(this));
     }.bind(this));

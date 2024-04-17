@@ -41,7 +41,6 @@ require_once($CFG->dirroot . '/mod/poster/renderer.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_poster extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -60,7 +59,7 @@ class mod_poster extends mod_page {
         $page->set_cm($this->cm);
         $page->set_context($this->context);
         $page->set_url('/mod/poster/view.php', ['id' => $cm->id]);
-        $page->set_title($course->shortname.': '.$poster->name);
+        $page->set_title($course->shortname . ': ' . $poster->name);
         $page->set_heading($course->fullname);
         $page->set_activity_record($poster);
         // Trigger module viewed event.
@@ -82,46 +81,8 @@ class mod_poster extends mod_page {
         $page->blocks->add_region('mod_poster-pre', true);
         $page->blocks->add_region('mod_poster-post', true);
 
-        $output = new mod_poster_renderer($page, RENDERER_TARGET_GENERAL);
+        $output = new helper\mod_poster_renderer($page, RENDERER_TARGET_GENERAL);
 
         return  $output->view_page($poster);
-    }
-}
-
-/**
- *  Mod poster overridden renderer
- *
- * @copyright  2021 Daniel Thies <dethies@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class mod_poster_renderer extends \mod_poster_renderer {
-    /**
-     * Render the poster main view page (view.php)
-     *
-     * @param stdClass $poster The poster instance record
-     * @return string
-     */
-    public function view_page($poster) {
-
-        if ($this->page->user_allowed_editing()) {
-            $this->page->set_button($this->edit_button($this->page->url));
-            $this->page->blocks->set_default_region('mod_poster-pre');
-            $this->page->theme->addblockposition = BLOCK_ADDBLOCK_POSITION_DEFAULT;
-        }
-
-        // We do not want the header, but need to set state to ready blocks.
-        $this->page->set_state(moodle_page::STATE_PRINTING_HEADER);
-
-        if ($poster->shownameview) {
-            $out .= $this->view_page_heading($poster);
-        }
-
-        if ($poster->showdescriptionview) {
-            $out .= $this->view_page_description($poster);
-        }
-
-        $out .= $this->view_page_content($poster);
-
-        return $out;
     }
 }

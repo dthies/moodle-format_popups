@@ -35,7 +35,6 @@ use context_user;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_page {
-
     /** @var string page path if submittend */
     protected $path = null;
 
@@ -100,7 +99,7 @@ class mod_page {
             'content',
             $page->revision
         );
-        $formatoptions = new stdClass;
+        $formatoptions = new stdClass();
         $formatoptions->noclean = true;
         $formatoptions->overflowdiv = true;
         $formatoptions->context = $this->context;

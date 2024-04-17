@@ -44,7 +44,6 @@ require_once($CFG->dirroot . '/mod/choice/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_choice extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -59,14 +58,20 @@ class mod_choice extends mod_page {
             throw new moodle_exception('invalidcoursemodule', 'choice');
         }
 
-        list($choiceavailable, $warnings) = choice_get_availability_status($choice);
+        [$choiceavailable, $warnings] = choice_get_availability_status($choice);
 
-        if (!empty($this->data->action) && $this->data->action == 'delchoice' && ($this->data->sesskey == sesskey())
-            && is_enrolled($this->context, null, 'mod/choice:choose') && $choice->allowupdate && $choiceavailable) {
+        if (
+            !empty($this->data->action) && $this->data->action == 'delchoice' && ($this->data->sesskey == sesskey())
+            && is_enrolled($this->context, null, 'mod/choice:choose') && $choice->allowupdate && $choiceavailable
+        ) {
             $answercount = $DB->count_records('choice_answers', ['choiceid' => $choice->id, 'userid' => $USER->id]);
             if ($answercount > 0) {
-                $choiceanswers = $DB->get_records('choice_answers', ['choiceid' => $choice->id, 'userid' => $USER->id],
-                    '', 'id');
+                $choiceanswers = $DB->get_records(
+                    'choice_answers',
+                    ['choiceid' => $choice->id, 'userid' => $USER->id],
+                    '',
+                    'id'
+                );
                 $todelete = array_keys($choiceanswers);
                 choice_delete_responses($todelete, $choice, $this->cm, $course);
             }
@@ -111,8 +116,10 @@ class mod_choice extends mod_page {
             } else if (empty($answer) && $action === 'makechoice') {
                 // We cannot use the 'makechoice' alone because there might be some legacy renderers without it,
                 // outdated renderers will not get the 'mustchoose' message - bad luck.
-                redirect(new moodle_url('/mod/choice/view.php',
-                    ['id' => $this->cm->id, 'notify' => 'mustchooseone', 'sesskey' => sesskey()]));
+                redirect(new moodle_url(
+                    '/mod/choice/view.php',
+                    ['id' => $this->cm->id, 'notify' => 'mustchooseone', 'sesskey' => sesskey()]
+                ));
             }
         }
 
@@ -161,15 +168,20 @@ class mod_choice extends mod_page {
         $current = choice_get_my_response($choice);
         // If user has already made a selection, and they are not allowed to update it
         // or if choice is not open, show their selected answer.
-        if (isloggedin() && (!empty($current)) &&
-            (empty($choice->allowupdate) || ($timenow > $choice->timeclose)) ) {
+        if (
+            isloggedin() && (!empty($current)) &&
+            (empty($choice->allowupdate) || ($timenow > $choice->timeclose))
+        ) {
             $choicetexts = [];
             foreach ($current as $c) {
                 $choicetexts[] = format_string(choice_get_option_text($choice, $c->optionid));
             }
             $content .= $OUTPUT->box(
-                get_string("yourselection", "choice",
-                userdate($choice->timeopen)) . ": " . implode('; ', $choicetexts),
+                get_string(
+                    "yourselection",
+                    "choice",
+                    userdate($choice->timeopen)
+                ) . ": " . implode('; ', $choicetexts),
                 'generalbox',
                 'yourselection'
             );
@@ -189,8 +201,7 @@ class mod_choice extends mod_page {
             $choiceopen = false;
         }
 
-        if ( (!$current || $choice->allowupdate) && $choiceopen && is_enrolled($this->context, null, 'mod/choice:choose')) {
-
+        if ((!$current || $choice->allowupdate) && $choiceopen && is_enrolled($this->context, null, 'mod/choice:choose')) {
             // Show information on how the results will be published to students.
             $publishinfo = null;
             switch ($choice->showresults) {
@@ -237,8 +248,11 @@ class mod_choice extends mod_page {
         if (!$choiceformshown) {
             if (isguestuser()) {
                 // Guest account.
-                $content .= $OUTPUT->confirm(get_string('noguestchoose', 'choice').'<br /><br />'.get_string('liketologin'),
-                             get_login_url(), new moodle_url('/course/view.php', ['id' => $course->id]));
+                $content .= $OUTPUT->confirm(
+                    get_string('noguestchoose', 'choice') . '<br /><br />' . get_string('liketologin'),
+                    get_login_url(),
+                    new moodle_url('/course/view.php', ['id' => $course->id])
+                );
             } else if (!is_enrolled($this->context)) {
                 // Only people enrolled can make a choice.
                 $SESSION->wantsurl = qualified_me();
@@ -248,14 +262,13 @@ class mod_choice extends mod_page {
                 $courseshortname = format_string($course->shortname, true, ['context' => $coursecontext]);
 
                 $content .= $OUTPUT->box_start('generalbox', 'notice');
-                $content .= '<p align="center">'. get_string('notenrolledchoose', 'choice') .'</p>';
+                $content .= '<p align="center">' . get_string('notenrolledchoose', 'choice') . '</p>';
                 $content .= $OUTPUT->container_start('continuebutton');
                 $content .= $OUTPUT->single_button(new moodle_url('/enrol/index.php?', [
                     'id' => $course->id,
                 ]), get_string('enrolme', 'core_enrol', $courseshortname));
                 $content .= $OUTPUT->container_end();
                 $content .= $OUTPUT->box_end();
-
             }
         }
 
@@ -265,7 +278,6 @@ class mod_choice extends mod_page {
             $renderer = $PAGE->get_renderer('mod_choice');
             $resultstable = $renderer->display_result($results);
             $content .= $OUTPUT->box($resultstable);
-
         } else if (!$choiceformshown) {
             $content .= $OUTPUT->box(get_string('noresultsviewable', 'choice'));
         }

@@ -5,6 +5,6 @@
 #format_popups_activity_content .navtop {
     text-align: right;
 }
-#format_popups_activity_content .activity-navigation form {
+#format_popups_activity_content .activity-navigation .urlselect {
     display: none;
 }

@@ -34,9 +34,9 @@ use html_writer;
 use moodle_exception;
 use moodle_url;
 
-require_once($CFG->dirroot.'/mod/book/lib.php');
-require_once($CFG->dirroot.'/mod/book/locallib.php');
-require_once($CFG->libdir.'/completionlib.php');
+require_once($CFG->dirroot . '/mod/book/lib.php');
+require_once($CFG->dirroot . '/mod/book/locallib.php');
+require_once($CFG->libdir . '/completionlib.php');
 
 /**
  * Activity renderer Popups course format
@@ -45,7 +45,6 @@ require_once($CFG->libdir.'/completionlib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_book extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -70,7 +69,7 @@ class mod_book extends mod_page {
         $chapters = book_preload_chapters($book);
 
         if ($allowedit && !$chapters) {
-            redirect('edit.php?cmid='.$cm->id); // No chapters - add new one.
+            redirect('edit.php?cmid=' . $cm->id); // No chapters - add new one.
         }
         // Check chapterid and read chapter data.
         if ($chapterid == '0') { // Go to first chapter if no given.
@@ -92,10 +91,12 @@ class mod_book extends mod_page {
         $courseurl = new moodle_url('/course/view.php', ['id' => $course->id]);
 
         // Chapter doesnt exist or it is hidden for students.
-        if ((!$chapter = $DB->get_record('book_chapters', [
+        if (
+            (!$chapter = $DB->get_record('book_chapters', [
             'id' => $chapterid,
             'bookid' => $book->id,
-        ])) || ($chapter->hidden && !$viewhidden)) {
+            ])) || ($chapter->hidden && !$viewhidden)
+        ) {
             throw new moodle_exception('errorchapter', 'book', $courseurl);
         }
 
@@ -149,13 +150,13 @@ class mod_book extends mod_page {
             if ($nextid) {
                 $navnext = get_string('navnext', 'book');
                 if ($book->navstyle == 1) {
-                    $chnavigation .= '<a title="' . $navnexttitle . '" class="booknext" href="#" data-chapterid="'.
-                        $nextid.' ">' .
+                    $chnavigation .= '<a title="' . $navnexttitle . '" class="booknext" href="#" data-chapterid="' .
+                        $nextid . ' ">' .
                         $OUTPUT->pix_icon($navnexticon, $navnexttitle, 'mod_book') . '</a>';
                 } else {
-                    $chnavigation .= ' <a title="' . $navnext . '" class="booknext" href="#" data-chapterid="'.
-                        $nextid. '">' .
-                        $navnext . ':<span class="chaptername">&nbsp;' . $nexttitle.
+                    $chnavigation .= ' <a title="' . $navnext . '" class="booknext" href="#" data-chapterid="' .
+                        $nextid . '">' .
+                        $navnext . ':<span class="chaptername">&nbsp;' . $nexttitle .
                         '<span class="arrow">&nbsp;' . $OUTPUT->rarrow() . '</span></span></a>';
                 }
             } else {
@@ -163,10 +164,11 @@ class mod_book extends mod_page {
                 $sec = $DB->get_field('course_sections', 'section', ['id' => $cm->section]);
                 $returnurl = course_get_url($course, $sec);
                 if ($book->navstyle == 1) {
-                    $chnavigation .= '<a title="' . $navexit . '" class="bookexit"  data-action="hide" href="'.$returnurl.'">' .
+                    $chnavigation .= '<a title="' . $navexit . '" class="bookexit"  data-action="hide" href="' . $returnurl . '">' .
                         $OUTPUT->pix_icon('nav_exit', $navexit, 'mod_book') . '</a>';
                 } else {
-                    $chnavigation .= ' <a title="' . $navexit . '" class="bookexit"  data-action="hide" href="'.$returnurl.'">' .
+                    $chnavigation .= ' <a title="' . $navexit .
+                        '" class="bookexit"  data-action="hide" href="' . $returnurl . '">' .
                         '<span class="chaptername">' . $navexit . '&nbsp;' . $OUTPUT->uarrow() . '</span></a>';
                 }
             }
@@ -217,7 +219,8 @@ class mod_book extends mod_page {
         $chaptertext = file_rewrite_pluginfile_urls(
             $chapter->content,
             'pluginfile.php',
-            $context->id, 'mod_book',
+            $context->id,
+            'mod_book',
             'chapter',
             $chapter->id
         );

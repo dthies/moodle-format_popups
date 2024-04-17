@@ -36,7 +36,6 @@ use format_popups\socket;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class stateactions extends stateactions_base {
-
     /**
      * Highlight course section.
      *

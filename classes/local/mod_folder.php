@@ -42,7 +42,6 @@ require_once($CFG->libdir . '/completionlib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_folder extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -75,4 +74,3 @@ class mod_folder extends mod_page {
         return $output->display_folder($folder);
     }
 }
-

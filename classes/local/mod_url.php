@@ -45,7 +45,6 @@ require_once($CFG->libdir . '/completionlib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_url extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -137,11 +136,9 @@ class mod_url extends mod_page {
 
         if (in_array($mimetype, ['image/gif', 'image/jpeg', 'image/png'])) { // It's an image.
             $code = resourcelib_embed_image($fullurl, $title);
-
         } else if ($mediamanager->can_embed_url($moodleurl, $embedoptions)) {
             // Media (audio/video) file.
             $code = $mediamanager->embed_url($moodleurl, $title, 0, 0, $embedoptions);
-
         } else {
             // Anything else - just try object tag enlarged as much as possible.
             $code = self::resourcelib_embed_general($fullurl, $title, $clicktoopen, $mimetype);
