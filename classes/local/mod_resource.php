@@ -33,9 +33,9 @@ use completion_info;
 use core_media_manager;
 use moodle_url;
 
-require_once($CFG->dirroot.'/mod/resource/lib.php');
-require_once($CFG->dirroot.'/mod/resource/locallib.php');
-require_once($CFG->libdir.'/completionlib.php');
+require_once($CFG->dirroot . '/mod/resource/lib.php');
+require_once($CFG->dirroot . '/mod/resource/locallib.php');
+require_once($CFG->libdir . '/completionlib.php');
 
 /**
  * Activity renderer Popups course format
@@ -44,7 +44,6 @@ require_once($CFG->libdir.'/completionlib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_resource extends mod_url {
-
     /**
      * Renders page contents
      *
@@ -68,8 +67,14 @@ class mod_resource extends mod_url {
         }
 
         $fs = get_file_storage();
-        $files = $fs->get_area_files($this->context->id, 'mod_resource',
-            'content', 0, 'sortorder DESC, id ASC', false);
+        $files = $fs->get_area_files(
+            $this->context->id,
+            'mod_resource',
+            'content',
+            0,
+            'sortorder DESC, id ASC',
+            false
+        );
         if (count($files) < 1) {
             resource_print_filenotfound($resource, $this->cm, $course);
             die;
@@ -80,8 +85,14 @@ class mod_resource extends mod_url {
 
         $resource->mainfile = $file->get_filename();
 
-        $moodleurl = moodle_url::make_pluginfile_url($this->context->id, 'mod_resource', 'content', $resource->revision,
-                $file->get_filepath(), $file->get_filename());
+        $moodleurl = moodle_url::make_pluginfile_url(
+            $this->context->id,
+            'mod_resource',
+            'content',
+            $resource->revision,
+            $file->get_filepath(),
+            $file->get_filename()
+        );
 
         $mimetype = $file->get_mimetype();
         $title    = $resource->name;
@@ -98,24 +109,22 @@ class mod_resource extends mod_url {
             // It's an image.
             $code = resourcelib_embed_image($moodleurl->out(), $title);
             $PAGE->requires->js_call_amd('format_popups/embed', 'init', [$this->context->id]);
-
         } else if ($mimetype === 'application/pdf') {
             // PDF document.
             $code = resourcelib_embed_pdf($moodleurl->out(), $title, $clicktoopen);
-
         } else if ($mediamanager->can_embed_url($moodleurl, $embedoptions)) {
             // Media (audio/video) file.
             $code = $mediamanager->embed_url($moodleurl, $title, 0, 0, $embedoptions);
-
-        } else if (in_array((int) $resource->display, [
+        } else if (
+            in_array((int) $resource->display, [
             RESOURCELIB_DISPLAY_EMBED,
             RESOURCELIB_DISPLAY_OPEN,
             RESOURCELIB_DISPLAY_POPUP,
-        ])) {
+            ])
+        ) {
             self::resource_display_embed($resource, $this->cm, $this->course, $file);
             $PAGE->requires->js_call_amd('format_popups/embed', 'init', [$this->context->id]);
             $code = '';
-
         } else {
             // Anything else ask to download.
             $moodleurl->param('forcedownload', 1);
@@ -146,8 +155,14 @@ class mod_resource extends mod_url {
         $clicktoopen = resource_get_clicktoopen($file, $resource->revision);
 
         $context = $this->context;
-        $moodleurl = moodle_url::make_pluginfile_url($context->id, 'mod_resource', 'content', $resource->revision,
-                $file->get_filepath(), $file->get_filename());
+        $moodleurl = moodle_url::make_pluginfile_url(
+            $context->id,
+            'mod_resource',
+            'content',
+            $resource->revision,
+            $file->get_filepath(),
+            $file->get_filename()
+        );
 
         $mimetype = $file->get_mimetype();
         $title    = $resource->name;
@@ -162,15 +177,12 @@ class mod_resource extends mod_url {
 
         if (file_mimetype_in_typegroup($mimetype, 'web_image')) {  // It's an image.
             $code = resourcelib_embed_image($moodleurl->out(), $title);
-
         } else if ($mimetype === 'application/pdf') {
             // PDF document.
             $code = resourcelib_embed_pdf($moodleurl->out(), $title, $clicktoopen);
-
         } else if ($mediamanager->can_embed_url($moodleurl, $embedoptions)) {
             // Media (audio/video) file.
             $code = $mediamanager->embed_url($moodleurl, $title, 0, 0, $embedoptions);
-
         } else {
             // We need a way to discover if we are loading remote docs inside an iframe.
             $moodleurl->param('embed', 1);
@@ -184,6 +196,5 @@ class mod_resource extends mod_url {
         echo $code;
 
         resource_print_intro($resource, $cm, $course);
-
     }
 }

@@ -25,17 +25,11 @@
 
 namespace format_popups\local;
 
-defined('MOODLE_INTERNAL') || die();
-
 use stdClass;
 use context_user;
 use core_tag_tag;
 use html_writer;
 use moodle_url;
-
-require_once($CFG->dirroot.'/mod/book/lib.php');
-require_once($CFG->dirroot.'/mod/book/locallib.php');
-require_once($CFG->libdir.'/completionlib.php');
 
 /**
  * Activity renderer Popups course format
@@ -44,7 +38,6 @@ require_once($CFG->libdir.'/completionlib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_customcert extends mod_url {
-
     /**
      * Renders page contents
      *

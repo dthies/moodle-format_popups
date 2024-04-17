@@ -25,18 +25,12 @@
 
 namespace format_popups\local;
 
-defined('MOODLE_INTERNAL') || die();
-
 use stdClass;
 use context_user;
 use core_tag_tag;
 use html_writer;
 use moodle_exception;
 use moodle_url;
-
-require_once($CFG->dirroot.'/mod/book/lib.php');
-require_once($CFG->dirroot.'/mod/book/locallib.php');
-require_once($CFG->libdir.'/completionlib.php');
 
 /**
  * Activity renderer Popups course format
@@ -45,7 +39,6 @@ require_once($CFG->libdir.'/completionlib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_etherpadlite extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -55,7 +48,7 @@ class mod_etherpadlite extends mod_page {
         global $DB, $OUTPUT, $PAGE, $USER;
         $cm = $this->cm;
         $context = $this->context;
-        list($course, $cm, $etherpadlite) = \mod_etherpadlite\util::get_coursemodule($cm->id, $cm->instance);
+        [$course, $cm, $etherpadlite] = \mod_etherpadlite\util::get_coursemodule($cm->id, $cm->instance);
 
         $config = get_config('etherpadlite');
         // START of Initialise the session for the Author.
@@ -107,7 +100,7 @@ class mod_etherpadlite extends mod_page {
 
         // Create author if not exists for logged in user (with full name as it is obtained from Moodle core library).
         if ((isguestuser() && etherpadlite_guestsallowed($etherpadlite)) || !$isgroupmember) {
-            $authorid = $client->create_author('Guest-'.etherpadlite_gen_random_string());
+            $authorid = $client->create_author('Guest-' . etherpadlite_gen_random_string());
         } else {
             $authorid = $client->create_author_if_not_exists_for($USER->id, fullname($USER));
         }
@@ -132,7 +125,7 @@ class mod_etherpadlite extends mod_page {
         $event->add_record_snapshot('etherpadlite', $etherpadlite);
         $event->trigger();
 
-        $PAGE->set_title(get_string('modulename', 'mod_etherpadlite').': '.format_string($etherpadlite->name));
+        $PAGE->set_title(get_string('modulename', 'mod_etherpadlite') . ': ' . format_string($etherpadlite->name));
         $PAGE->set_heading(format_string($course->fullname));
         $PAGE->set_context($context);
 
@@ -143,6 +136,5 @@ class mod_etherpadlite extends mod_page {
 
         // Print the etherpad content.
         return $renderer->render_etherpad($etherpadlite, $cm, $fullurl);
-
     }
 }

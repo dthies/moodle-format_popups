@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot. '/course/format/lib.php');
-require_once($CFG->dirroot. '/course/format/topics/lib.php');
+require_once($CFG->dirroot . '/course/format/lib.php');
+require_once($CFG->dirroot . '/course/format/topics/lib.php');
 
 use core\output\inplace_editable;
 
@@ -37,7 +37,6 @@ use core\output\inplace_editable;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_popups extends format_topics {
-
     /**
      * Returns true if this course format uses course index
      *
@@ -135,7 +134,9 @@ function format_popups_inplace_editable($itemtype, $itemid, $newvalue) {
     if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
         $section = $DB->get_record_sql(
             'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-            [$itemid, 'popups'], MUST_EXIST);
+            [$itemid, 'popups'],
+            MUST_EXIST
+        );
         return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
 }
@@ -166,7 +167,7 @@ function format_popups_output_fragment_mod($args) {
     if (!class_exists($class)) {
         throw new moodle_exception('modulenotsupported');
     }
-    list ($course, $cm) = get_course_and_cm_from_cmid($context->instanceid, $modname);
+     [$course, $cm] = get_course_and_cm_from_cmid($context->instanceid, $modname);
     require_course_login($course, true, $cm);
 
     $module = new $class($cm, $context, $course, $data, $path, $submitbutton);
@@ -221,7 +222,7 @@ function format_popups_output_fragment_page($args) {
 
     $renderer = $PAGE->get_renderer('format_' . $format->get_format());
     if (!empty($displaysection)) {
-        $format->set_section_number($displaysection);
+        $format->set_sectionid($displaysection);
     }
     $outputclass = $format->get_output_classname('content');
     $widget = new $outputclass($format);
@@ -229,7 +230,7 @@ function format_popups_output_fragment_page($args) {
     $contents = $renderer->render($widget);
 
     // Trigger course viewed event.
-    course_view(context_course::instance($course->id), $displaysection);
+    course_section_view($context, $displaysection);
 
     return $contents;
 }

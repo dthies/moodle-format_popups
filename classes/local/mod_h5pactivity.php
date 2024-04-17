@@ -47,7 +47,6 @@ require_once($CFG->dirroot . '/mod/h5pactivity/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_h5pactivity extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -56,7 +55,7 @@ class mod_h5pactivity extends mod_page {
     public function render() {
         global $OUTPUT, $PAGE, $USER;
 
-        list ($course, $this->cm) = get_course_and_cm_from_cmid($this->cm->id, 'h5pactivity');
+         [$course, $this->cm] = get_course_and_cm_from_cmid($this->cm->id, 'h5pactivity');
 
         $manager = manager::create_from_coursemodule($this->cm);
 
@@ -80,9 +79,15 @@ class mod_h5pactivity extends mod_page {
         $fs = get_file_storage();
         $files = $fs->get_area_files($context->id, 'mod_h5pactivity', 'package', 0, 'id', false);
         $file = reset($files);
-        $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
-                            $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-                            $file->get_filename(), false);
+        $fileurl = moodle_url::make_pluginfile_url(
+            $file->get_contextid(),
+            $file->get_component(),
+            $file->get_filearea(),
+            $file->get_itemid(),
+            $file->get_filepath(),
+            $file->get_filename(),
+            false
+        );
 
         if (!empty($moduleinstance->intro)) {
             $content .= $OUTPUT->box(format_module_intro('h5pactivity', $moduleinstance, $this->cm->id), 'generalbox', 'intro');
@@ -91,7 +96,7 @@ class mod_h5pactivity extends mod_page {
         // Attempts review.
         if ($manager->can_view_all_attempts()) {
             $reviewurl = new moodle_url('/mod/h5pactivity/report.php', ['a' => $this->cm->instance]);
-            $reviewmessage = get_string('review_all_attempts', 'mod_h5pactivity', $manager->count_attempts());
+            $reviewmessage = get_string('viewattempts', 'mod_h5pactivity', $manager->count_attempts());
         } else if ($manager->can_view_own_attempts() && $manager->count_attempts($USER->id)) {
             $reviewurl = new moodle_url('/mod/h5pactivity/report.php', ['a' => $this->cm->instance, 'userid' => $USER->id]);
             $reviewmessage = get_string('review_my_attempts', 'mod_h5pactivity');

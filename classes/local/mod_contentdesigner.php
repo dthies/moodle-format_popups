@@ -47,7 +47,6 @@ require_once($CFG->dirroot . '/mod/h5pactivity/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_contentdesigner extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -75,6 +74,5 @@ class mod_contentdesigner extends mod_page {
         $PAGE->requires->js_call_amd('mod_contentdesigner/elements', 'animateElements', []);
 
         return $content;
-
     }
 }

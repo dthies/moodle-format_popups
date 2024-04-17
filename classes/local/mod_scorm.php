@@ -33,9 +33,9 @@ use html_writer;
 use js_writer;
 use moodle_url;
 
-require_once($CFG->dirroot.'/mod/scorm/lib.php');
-require_once($CFG->dirroot.'/mod/scorm/locallib.php');
-require_once($CFG->dirroot.'/course/lib.php');
+require_once($CFG->dirroot . '/mod/scorm/lib.php');
+require_once($CFG->dirroot . '/mod/scorm/locallib.php');
+require_once($CFG->dirroot . '/course/lib.php');
 
 /**
  * Activity renderer Popups course format
@@ -44,7 +44,6 @@ require_once($CFG->dirroot.'/course/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_scorm extends mod_page {
-
     /**
      * Renders page contents
      *
@@ -74,11 +73,9 @@ class mod_scorm extends mod_page {
                 $scorm->forcenewattempt == SCORM_FORCEATTEMPT_ALWAYS
                 || ($result->incomplete === false && $scorm->forcenewattempt == SCORM_FORCEATTEMPT_ONCOMPLETE)
             ) {
-
                 $this->data->scoid = $scorm->launch;
             } else {
-
-                $scoes = $DB->get_records_select('scorm_scoes', 'scorm = ? AND '.
+                $scoes = $DB->get_records_select('scorm_scoes', 'scorm = ? AND ' .
                     $DB->sql_isnotempty('scorm_scoes', 'launch', false, true), [$scorm->id], 'sortorder, id', 'id');
 
                 if ($scoes) {
@@ -99,8 +96,8 @@ class mod_scorm extends mod_page {
                 if (!$name) {
                     $name = 'DefaultPlayerWindow';
                 }
-                $name = 'scorm_'.$name;
-                echo html_writer::script('', $CFG->wwwroot.'/mod/scorm/player.js');
+                $name = 'scorm_' . $name;
+                echo html_writer::script('', $CFG->wwwroot . '/mod/scorm/player.js');
                 $url = new moodle_url('/mod/scorm/player.php', [
                     'cm' => $this->cm->id,
                     'scoid' => $this->data->scoid,
@@ -112,7 +109,8 @@ class mod_scorm extends mod_page {
                         $url->out(false),
                         $name, $scorm->options,
                         $scorm->width, $scorm->height,
-                    ]));
+                    ])
+                );
                     $contents = ob_get_contents();
                     ob_end_clean();
 
@@ -164,10 +162,11 @@ class mod_scorm extends mod_page {
                 }
             }
 
-            if (empty($preventskip) && $scorm->skipview >= SCORM_SKIPVIEW_FIRST &&
+            if (
+                empty($preventskip) && $scorm->skipview >= SCORM_SKIPVIEW_FIRST &&
                 has_capability('mod/scorm:skipview', $contextmodule) &&
-                !has_capability('mod/scorm:viewreport', $contextmodule)) { // Don't skip users with the capability to view reports.
-
+                !has_capability('mod/scorm:viewreport', $contextmodule)
+            ) { // Don't skip users with the capability to view reports.
                 // Do we launch immediately and redirect the parent back ?
                 if ($scorm->skipview == SCORM_SKIPVIEW_ALWAYS || !scorm_has_tracks($scorm->id, $USER->id)) {
                     $launch = true;
@@ -188,21 +187,23 @@ class mod_scorm extends mod_page {
 
         // Print the main part of the page.
         $attemptstatus = '';
-        if (empty($launch) && ($scorm->displayattemptstatus == SCORM_DISPLAY_ATTEMPTSTATUS_ALL ||
-                 $scorm->displayattemptstatus == SCORM_DISPLAY_ATTEMPTSTATUS_ENTRY)) {
+        if (
+            empty($launch) && ($scorm->displayattemptstatus == SCORM_DISPLAY_ATTEMPTSTATUS_ALL ||
+                 $scorm->displayattemptstatus == SCORM_DISPLAY_ATTEMPTSTATUS_ENTRY)
+        ) {
             $attemptstatus = scorm_get_attempt_status($USER, $scorm, $cm);
         }
-        echo $OUTPUT->box(format_module_intro('scorm', $scorm, $cm->id).$attemptstatus, 'container', 'intro');
+        echo $OUTPUT->box(format_module_intro('scorm', $scorm, $cm->id) . $attemptstatus, 'container', 'intro');
 
         // Check if SCORM available.
-        list($available, $warnings) = scorm_get_availability_status($scorm);
+        [$available, $warnings] = scorm_get_availability_status($scorm);
         if (!$available) {
             $reason = current(array_keys($warnings));
             echo $OUTPUT->box(get_string($reason, "scorm", $warnings[$reason]), "container");
         }
 
         if ($available && empty($launch)) {
-            scorm_print_launch($USER, $scorm, 'view.php?id='.$cm->id, $cm);
+            scorm_print_launch($USER, $scorm, 'view.php?id=' . $cm->id, $cm);
         }
 
         $contents = ob_get_contents();

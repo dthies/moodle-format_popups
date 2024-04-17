@@ -37,7 +37,6 @@ use format_popups\socket;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class observer {
-
     /**
      * Handle an event
      *
@@ -66,6 +65,5 @@ class observer {
         } catch (moodle_exception $e) {
             return;
         }
-
     }
 }

@@ -53,7 +53,6 @@ use context_helper;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class external extends external_api {
-
     /**
      * Parameter description for get_available_mods().
      *
