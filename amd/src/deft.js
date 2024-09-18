@@ -43,8 +43,15 @@ export const init = (contextid, courseid, displaysection, token, throttle) => {
     const socket = new Socket(contextid, token);
     Popups.init(contextid, courseid, displaysection, 'format_popups');
 
+    let first = true;
     socket.subscribe(
-        debounce(Popups.updatePage.bind(Popups), throttle)
+        debounce(() => {
+            if (first) {
+                first = false;
+            } else {
+                Popups.updatePage();
+            }
+        }, throttle)
     );
 };
 
