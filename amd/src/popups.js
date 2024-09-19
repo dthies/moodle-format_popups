@@ -24,7 +24,7 @@ import Ajax from 'core/ajax';
 import config from 'core/config';
 import Fragment from 'core/fragment';
 import ModalEvents from 'core/modal_events';
-import ModalFactory from 'core/modal_factory';
+import Modal from 'core/modal_cancel';
 import notification from 'core/notification';
 import templates from 'core/templates';
 import loadChapter from 'format_popups/book';
@@ -46,7 +46,7 @@ export const init = (contextid, courseid, displaysection) => {
         return;
     }
 
-    ModalFactory.create({
+    Modal.create({
         large: true,
         title: 'title',
         body: '<div id="format_popups_activity_content"></div>'
@@ -159,7 +159,7 @@ function registerListeners() {
     }.bind(this));
 
     // Update the page so new completion and conditions show.
-    this.getRoot().on(ModalEvents.hidden, updatePage.bind(this));
+    this.getRoot().on(ModalEvents.hidden, updatePage);
 
     // Add event listener for file upload complete.
     document.addEventListener('focusin', function() {
@@ -201,7 +201,7 @@ function registerListeners() {
     ).forEach(function(container) {
         container.addEventListener('click', function(e) {
             const anchor = e.target.closest('a') || e.target;
-            if (anchor && anchor.getAttribute('href')) {
+            if (anchor && anchor.getAttribute('href') && !anchor.closest('.moodle-actionmenu')) {
                 const href = anchor.getAttribute('href'),
                     url = new URL(href),
                     params = url.searchParams;
@@ -217,7 +217,7 @@ function registerListeners() {
                 e.preventDefault();
                 e.stopPropagation();
                 window.history.pushState({}, null, url);
-                updatePage.bind(this)();
+                updatePage();
             }
         }.bind(this));
     }.bind(this));
@@ -231,7 +231,7 @@ function registerListeners() {
                 params = url.searchParams;
             if (params.get('id') === this.courseid) {
                 this.displaysection = params.get('section');
-                updatePage.bind(this)();
+                updatePage();
                 e.preventDefault();
                 e.stopPropagation();
             }
