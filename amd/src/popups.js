@@ -78,6 +78,11 @@ export const init = (contextid, courseid, displaysection) => {
 export const updatePage = function() {
     'use strict';
 
+    if (document.body.classList.contains('popups_update')) {
+        return;
+    }
+    document.body.classList.add('popups_update');
+
     Fragment.loadFragment(
         'format_popups',
         'page',
@@ -86,6 +91,7 @@ export const updatePage = function() {
             displaysection: root.displaysection
         }
     ).then(function(html, js) {
+        document.body.classList.remove('popups_update');
         if (!html.length) {
             return;
         }
