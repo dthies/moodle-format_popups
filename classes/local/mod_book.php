@@ -193,12 +193,19 @@ class mod_book extends mod_page {
             echo $OUTPUT->box(format_module_intro('book', $book, $cm->id), 'generalbox', 'intro');
         }
 
-        $navclasses = book_get_nav_classes();
+        if (class_exists('\\mod_book\\output\\main_action_menu')) {
+            $renderer = $PAGE->get_renderer('mod_book');
+            $actionmenu = new \mod_book\output\main_action_menu($cm->id, $chapters, $chapter, $book);
+            $renderedmenu = $renderer->render($actionmenu);
+            echo html_writer::div($renderedmenu, '', ['id' => 'mod_book-chaptersnavigation']);
+        } else {
+            $navclasses = book_get_nav_classes();
 
-        if ($book->navstyle) {
-            // Upper navigation.
-            echo '<div class="navtop border-top py-3 clearfix collapse show ' .
-                $navclasses[$book->navstyle] . '">' . $chnavigation . '</div>';
+            if ($book->navstyle) {
+                // Upper navigation.
+                echo '<div class="navtop border-top py-3 clearfix collapse show ' .
+                    $navclasses[$book->navstyle] . '">' . $chnavigation . '</div>';
+            }
         }
 
         // The chapter itself.
@@ -236,7 +243,7 @@ class mod_book extends mod_page {
             echo $OUTPUT->tag_list(core_tag_tag::get_item_tags('mod_book', 'book_chapters', $chapter->id), null, 'book-tags');
         }
 
-        if ($book->navstyle) {
+        if (!class_exists('\\mod_book\\output\\main_action_menu') && $book->navstyle) {
             // Lower navigation.
             echo '<div class="navbottom py-3 border-bottom clearfix ' . $navclasses[$book->navstyle] . '">' .
                 $chnavigation . '</div>';
@@ -247,6 +254,6 @@ class mod_book extends mod_page {
 
         $PAGE->requires->js_call_amd('format_popups/book', 'init', [$context->id]);
 
-        return $contents;
+        return html_writer::div($contents, '', ['class' => 'p-3 m-3']);
     }
 }

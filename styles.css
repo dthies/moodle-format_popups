@@ -8,3 +8,71 @@
 #format_popups_activity_content .activity-navigation .urlselect {
     display: none;
 }
+
+#format_popups_activity_content #mod_book-chaptersnavigation {
+    top: 80px;
+    width: inherit;
+    margin: 0 -35px;
+    position: sticky; /* Make navigation sticky. */
+}
+
+#format_popups_activity_content #mod_book-chaptersnavigation .tertiary-navigation .navitem {
+    margin-bottom: -52px;
+}
+
+#format_popups_activity_content .book_content {
+    margin: 0 5px;
+    padding-right: 15px;
+    padding-left: 15px;
+    position: relative; /* Chapter navigation should not float on top of content. */
+}
+
+#format_popups_activity_content .btn-previous,
+#format_popups_activity_content .btn-next {
+    background: #dee2e6;
+    box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 0.075);
+    padding: 13px 10px;
+}
+
+#format_popups_activity_content .btn-previous {
+    border-radius: 200px 0 0 200px;
+}
+
+#format_popups_activity_content .btn-next {
+    border-radius: 0 200px 200px 0;
+}
+
+#format_popups_activity_content.dir-rtl .btn-previous .icon,
+#format_popups_activity_content.dir-rtl .btn-next .icon {
+    transform: scale(-1, -1); /* Flip the icons in RTL languages */
+}
+
+#format_popups_activity_content .btn-previous .icon,
+#format_popups_activity_content .btn-next .icon {
+    font-size: 24px;
+    width: auto;
+    height: auto;
+    margin: auto;
+}
+
+@media (max-width: 768px) {
+    #format_popups_activity_content #mod_book-chaptersnavigation {
+        top: calc(100% - 250px);
+        margin: 0 -5rem;
+        z-index: 1;
+    }
+
+    #format_popups_activity_content .btn-previous,
+    #format_popups_activity_content .btn-next {
+        opacity: 0.85;
+        border-radius: 25px;
+        padding: 10px;
+        width: 45px;
+        height: 45px;
+    }
+
+    #format_popups_activity_content .book_content {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+}
