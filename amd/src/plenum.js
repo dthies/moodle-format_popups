@@ -20,6 +20,7 @@
  * @copyright  2021 Daniel Thies <dethies@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 import config from 'core/config';
 import Fragment from 'core/fragment';
 import notification from 'core/notification';
@@ -72,16 +73,21 @@ const changeGroup = async(e) => {
         if (config.wwwroot + '/mod/plenum/view.php' !== form.getAttribute('action')) {
             return;
         }
-        Fragment.loadFragment(
-            'format_popups',
-            'mod',
-            contextid,
-            {
-                jsondata: JSON.stringify(params.toString()),
-                modname: modname
-            }
-        ).then(
-            templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
-        ).fail(notification.exception);
+        try {
+            templates.replaceNodeContents(
+                '#format_popups_activity_content',
+                Fragment.loadFragment(
+                    'format_popups',
+                    'mod',
+                    contextid,
+                    {
+                        jsondata: JSON.stringify(params.toString()),
+                        modname: modname
+                    }
+                )
+            );
+        } catch (e) {
+            notification.exeception(e);
+        }
     }
 };

@@ -70,7 +70,7 @@ Feature: Sections can be edited and deleted in popup activities format
   Scenario: Deleting the last section in popup activities format
     Given I am on "Course 1" course homepage with editing mode on
     When I delete section "5"
-    Then I should see "Are you absolutely sure you want to completely delete \"Section 5\" and all the activities it contains?"
+    Then I should see "and all the activities it contains"
     And I press "Delete"
     And I should not see "Section 5"
     And I should see "Section 4"

@@ -44,10 +44,18 @@ export const init = (id) => {
         }
     });
     if (content.querySelector('#book_toc') && !document.querySelector('#toggletoc')) {
-        templates.render('format_popups/booktoc', []).then(templates.prependNodeContents.bind(
-            templates,
-            content.closest('.modal-content').querySelector('.modal-title')
-        )).fail(notification.exception);
+        content.closest('.modal-content').querySelectorAll('.modal-title').forEach(async function(header) {
+            try {
+                const node = await templates.render('format_popups/booktoc', []);
+                templates.prependNodeContents(
+                    header,
+                    node,
+                    ''
+                );
+            } catch (e) {
+                notification.exception(e);
+            }
+        });
     }
 };
 
@@ -74,16 +82,21 @@ export const loadChapter = (e) => {
         }
         e.preventDefault();
         e.stopPropagation();
-        Fragment.loadFragment(
-            'format_popups',
-            'mod',
-            contextid,
-            {
-                jsondata: JSON.stringify(params.toString()),
-                modname: 'book'
-            }
-        ).then(
-            templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
-        ).fail(notification.exception);
+        try {
+            templates.replaceNodeContents(
+                '#format_popups_activity_content',
+                Fragment.loadFragment(
+                    'format_popups',
+                    'mod',
+                    contextid,
+                    {
+                        jsondata: JSON.stringify(params.toString()),
+                        modname: 'book'
+                    }
+                )
+            );
+        } catch (e) {
+            notification.exception(e);
+        }
     }
 };

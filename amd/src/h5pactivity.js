@@ -48,7 +48,7 @@ export const init = (id, name, instanceid) => {
  *
  * @param {object} e Event
  */
-const showReport = (e) => {
+const showReport = async(e) => {
     let anchor = e.target.closest('a');
     if (anchor) {
         let url = new URL(anchor.getAttribute('href')),
@@ -57,17 +57,19 @@ const showReport = (e) => {
         if (url.origin + url.pathname === config.wwwroot + '/mod/h5pactivity/report.php' && params.get('a') === instance) {
             e.preventDefault();
             e.stopPropagation();
-            Fragment.loadFragment(
-                'format_popups',
-                'mod',
-                contextid,
-                {
-                    jsondata: JSON.stringify(params.toString()),
-                    modname: modname
-                }
-            ).then(
-                templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
-            ).fail(notification.exception);
+            try {
+                templates.replaceNodeContents('#format_popups_activity_content', await Fragment.loadFragment(
+                    'format_popups',
+                    'mod',
+                    contextid,
+                    {
+                        jsondata: JSON.stringify(params.toString()),
+                        modname: modname
+                    }
+                ));
+            } catch (e) {
+                notification.exception(e);
+            }
         }
     }
 };

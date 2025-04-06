@@ -72,7 +72,7 @@ export const init = (id, name) => {
  *
  * @param {object} e event
  */
-function handleLink(e) {
+async function handleLink(e) {
     'use strict';
     let anchor = e.target.closest('a');
     if (anchor) {
@@ -96,17 +96,19 @@ function handleLink(e) {
         if (url.toString() && url.pathname.search('mod/choice/view.php') > 0) {
             e.preventDefault();
             e.stopPropagation();
-            Fragment.loadFragment(
-                'format_popups',
-                'mod',
-                contextid,
-                {
-                    jsondata: JSON.stringify(params.toString()),
-                    modname: modname
-                }
-            ).then(
-                templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
-            ).fail(notification.exception);
+            try {
+                templates.replaceNodeContents('#format_popups_activity_content', await Fragment.loadFragment(
+                    'format_popups',
+                    'mod',
+                    contextid,
+                    {
+                        jsondata: JSON.stringify(params.toString()),
+                        modname: modname
+                    }
+                ));
+            } catch (e) {
+                notification.exception(e);
+            }
         }
     }
 }
@@ -135,7 +137,7 @@ const showReport = (response) => {
  *
  * @param {object} e event
  */
-const changeGroup = (e) => {
+const changeGroup = async(e) => {
     let form = e.target.closest('form');
     if (form && e.target.closest('select.custom-select')) {
         let formdata = new FormData(form),
@@ -144,17 +146,19 @@ const changeGroup = (e) => {
         e.stopPropagation();
         e.preventDefault();
         if (config.wwwroot + '/mod/choice/view.php' === form.getAttribute('action')) {
-            Fragment.loadFragment(
-                'format_popups',
-                'mod',
-                contextid,
-                {
-                    jsondata: JSON.stringify(params.toString()),
-                    modname: modname
-                }
-            ).then(
-                templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
-            ).fail(notification.exception);
+            try {
+                templates.replaceNodeContents('#format_popups_activity_content', await Fragment.loadFragment(
+                    'format_popups',
+                    'mod',
+                    contextid,
+                    {
+                        jsondata: JSON.stringify(params.toString()),
+                        modname: modname
+                    }
+                ));
+            } catch (e) {
+                notification.exception(e);
+            }
         } else if (config.wwwroot + '/mod/choice/report.php' === url.origin + url.pathname) {
             let xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {

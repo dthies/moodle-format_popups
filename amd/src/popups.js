@@ -46,11 +46,16 @@ export const init = (contextid, courseid, displaysection) => {
         return;
     }
 
-    Modal.create({
-        large: true,
-        title: 'title',
-        body: '<div id="format_popups_activity_content"></div>'
-    }).then(function(modal) {
+    createModal(contextid, courseid, displaysection);
+};
+
+const createModal = async(contextid, courseid, displaysection) => {
+    try {
+        const modal = await Modal.create({
+            large: true,
+            title: 'title',
+            body: '<div id="format_popups_activity_content"></div>'
+        });
         modal.contextid = contextid;
         modal.courseid = courseid;
         modal.displaysection = displaysection;
@@ -59,7 +64,7 @@ export const init = (contextid, courseid, displaysection) => {
         root = modal;
         registerListeners.bind(modal)();
 
-        return Ajax.call([{
+        return await Ajax.call([{
             methodname: 'format_popups_get_available_mods',
             args: {
                 contextid: modal.contextid
@@ -69,7 +74,11 @@ export const init = (contextid, courseid, displaysection) => {
             }.bind(modal),
             fail: notification.exception
         }]);
-    }).catch(notification.exception);
+    } catch (e) {
+        notification.exception(e);
+    }
+
+    return false;
 };
 
 /**

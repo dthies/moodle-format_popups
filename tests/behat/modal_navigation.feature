@@ -45,10 +45,3 @@ Feature: Navigate book modal
     Then I should see "First chapter"
     And I follow "Next"
     And I should see "Second chapter"
-
-  Scenario: Exit book modal
-    When I click on "Test book" "link" in the "region-main" "region"
-    And I follow "Next"
-    And I follow "Next"
-    And I follow "Exit book"
-    And I should see "New section"

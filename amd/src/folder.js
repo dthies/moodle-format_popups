@@ -44,7 +44,7 @@ export const init = (context, cm) => {
  *
  * @param {object} e event
  */
-const embedFiles = (e) => {
+const embedFiles = async(e) => {
     'use strict';
     let anchor = e.target.closest('div.foldertree a');
 
@@ -58,23 +58,25 @@ const embedFiles = (e) => {
             e.preventDefault();
             e.stopPropagation();
             returnurl.searchParams.append('id', cmid);
-            templates.render(
+            try {
+                templates.replaceNodeContents('#format_popups_activity_content', await templates.render(
                 'format_popups/embedfile',
-                {
-                    heading: decodeURI(path[4]),
-                    image: isimage,
-                    returnurl: returnurl.toString(),
-                    url: url.toString(),
-                    params: [
-                        {
-                            name: 'forcedownload',
-                            value: 1
-                        }
-                    ]
-                }
-            ).then(
-                templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
-            ).fail(notification.exception);
+                    {
+                        heading: decodeURI(path[4]),
+                        image: isimage,
+                        returnurl: returnurl.toString(),
+                        url: url.toString(),
+                        params: [
+                            {
+                                name: 'forcedownload',
+                                value: 1
+                            }
+                        ]
+                    }
+                ));
+            } catch (e) {
+                notification.exception(e);
+            }
         }
     }
 };

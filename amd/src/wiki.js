@@ -43,7 +43,7 @@ export const init = (id) => {
  *
  * @param {object} e event
  */
-export const loadPage = (e) => {
+export const loadPage = async(e) => {
     'use strict';
     const anchor = e.target.closest('a');
 
@@ -58,16 +58,18 @@ export const loadPage = (e) => {
         }
         e.preventDefault();
         e.stopPropagation();
-        Fragment.loadFragment(
-            'format_popups',
-            'mod',
-            contextid,
-            {
-                jsondata: JSON.stringify(params.toString()),
-                modname: 'wiki'
-            }
-        ).then(
-            templates.replaceNodeContents.bind(templates, '#format_popups_activity_content')
-        ).fail(notification.exception);
+        try {
+            templates.replaceNodeContents('#format_popups_activity_content', await Fragment.loadFragment(
+                'format_popups',
+                'mod',
+                contextid,
+                {
+                    jsondata: JSON.stringify(params.toString()),
+                    modname: 'wiki'
+                }
+            ));
+        } catch (e) {
+            notification.exception(e);
+        }
     }
 };
