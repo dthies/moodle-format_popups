@@ -47,32 +47,62 @@ require_once($CFG->dirroot . '/mod/h5pactivity/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_contentdesigner extends mod_page {
+
+    /** @var $contentdesigner contentdesigner instance object */
+    public $contentdesigner = null;
+
+
     /**
      * Renders page contents
      *
      * @return string page contents
      */
     public function render() {
-        global $DB, $PAGE;
+        global $DB, $PAGE, $USER;
 
+        $cm = $this->cm;
+        $course = $this->course;
         $context = $this->context;
+
+        $contentdesigner = $DB->get_record('contentdesigner', ['id' => $cm->instance], '*', MUST_EXIST);
+
+        $this->contentdesigner = new \mod_contentdesigner\content_display($contentdesigner,  $cm, $course, $context);
+
+        require_capability('mod/contentdesigner:view', $context);
 
         if (!$data = $DB->get_record('contentdesigner', ['id' => $this->cm->instance])) {
             throw new moodle_exception('course module is incorrect');
         }
 
-        require_capability('mod/contentdesigner:view', $context);
 
-        // Completion and trigger events.
+        if(!empty($this->data->action)) {
+            switch ($this->data->action) {
+                case 'finishattempt':
+                    $this->contentdesigner->finish_attempt($this->data->attemptid, true);
+                    if ($contentdesigner->enablegrading) {
+                        return  $this->contentdesigner->view_summary(true);
+                    } else {
+                        return  $this->contentdesigner->view_content(true);
+                    }
+                    break;
+                case 'makeattempt':
+                    return $this->contentdesigner->make_attempt(true);
+                    break;
+                case 'continueattempt':
+                    return $this->contentdesigner->continue_attempt($this->data->attemptid, true);
+                    break;
+            }
+        }
+
         contentdesigner_view($data, $this->course, $this->cm, $context);
 
-        // Render the page view of the elements.
-        $editor = new \mod_contentdesigner\editor($this->cm, $this->course);
-        $editor->initiate_js();
-
-        $content = $editor->render_elements();
         $PAGE->requires->js_call_amd('mod_contentdesigner/elements', 'animateElements', []);
+        $PAGE->requires->js_call_amd('format_popups/form', 'init', [$this->context->id, $this->cm->modname]);
 
-        return $content;
+        if ($contentdesigner->enablegrading) {
+            return  $this->contentdesigner->view_summary(true);
+        } else {
+            return  $this->contentdesigner->view_content(true);
+        }
     }
 }
