@@ -19,26 +19,15 @@
  *
  * @package    format_popups
  * @copyright  2021 Daniel Thies <dethies@gmail.com>
- *             adapted from Moodle mod_h5pactivity
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace format_popups\local;
 
-defined('MOODLE_INTERNAL') || die();
-
 use stdClass;
 use context_user;
-use core_h5p\factory;
-use core_h5p\player;
-use core_h5p\helper;
-use mod_h5pactivity\local\manager;
-use mod_h5pactivity\output\reportlink;
-use mod_h5pactivity\event\report_viewed;
 use moodle_exception;
 use moodle_url;
-
-require_once($CFG->dirroot . '/mod/h5pactivity/lib.php');
 
 /**
  * Activity renderer Popups course format
@@ -47,10 +36,8 @@ require_once($CFG->dirroot . '/mod/h5pactivity/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_contentdesigner extends mod_page {
-
     /** @var $contentdesigner contentdesigner instance object */
     public $contentdesigner = null;
-
 
     /**
      * Renders page contents
@@ -64,18 +51,20 @@ class mod_contentdesigner extends mod_page {
         $course = $this->course;
         $context = $this->context;
 
-        $contentdesigner = $DB->get_record('contentdesigner', ['id' => $cm->instance], '*', MUST_EXIST);
-
-        $this->contentdesigner = new \mod_contentdesigner\content_display($contentdesigner,  $cm, $course, $context);
-
         require_capability('mod/contentdesigner:view', $context);
 
-        if (!$data = $DB->get_record('contentdesigner', ['id' => $this->cm->instance])) {
-            throw new moodle_exception('course module is incorrect');
+        $contentdesigner = $DB->get_record('contentdesigner', ['id' => $cm->instance], '*', MUST_EXIST);
+
+        if (class_exists('\mod_contentdesigner\content_display')) {
+            $this->contentdesigner = new \mod_contentdesigner\content_display($contentdesigner, $cm, $course, $context);
+        } else {
+            // Render the page view of the elements.
+            $editor = new \mod_contentdesigner\editor($this->cm, $this->course);
+            $editor->initiate_js();
+            $content = $editor->render_elements();
         }
 
-
-        if(!empty($this->data->action)) {
+        if (!empty($this->data->action)) {
             switch ($this->data->action) {
                 case 'finishattempt':
                     $this->contentdesigner->finish_attempt($this->data->attemptid, true);
@@ -94,14 +83,18 @@ class mod_contentdesigner extends mod_page {
             }
         }
 
-        contentdesigner_view($data, $this->course, $this->cm, $context);
+        // Completion and trigger events.
+        contentdesigner_view($contentdesigner, $this->course, $this->cm, $context);
 
         $PAGE->requires->js_call_amd('mod_contentdesigner/elements', 'animateElements', []);
-        $PAGE->requires->js_call_amd('format_popups/form', 'init', [$this->context->id, $this->cm->modname]);
 
-        if ($contentdesigner->enablegrading) {
+        if (!class_exists('\mod_contentdesigner\content_display')) {
+            return $content;
+        } else if ($contentdesigner->enablegrading) {
+            $PAGE->requires->js_call_amd('format_popups/form', 'init', [$this->context->id, $this->cm->modname]);
             return  $this->contentdesigner->view_summary(true);
         } else {
+            $PAGE->requires->js_call_amd('format_popups/form', 'init', [$this->context->id, $this->cm->modname]);
             return  $this->contentdesigner->view_content(true);
         }
     }

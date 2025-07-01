@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require($CFG->dirroot . '/course/format/topics/format.php');
 
-// The additional javascript added for this format is not included by the
+// The additional javascript added for this format is now included by the
 // section content renderer. To add this functionality to another format
 // you should extend format_popups\output\courseformat\content class in
 // the new format and add a dependency in version.php to this format.
