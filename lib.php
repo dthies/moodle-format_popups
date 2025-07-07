@@ -190,7 +190,7 @@ function format_popups_output_fragment_mod($args) {
     $format = course_get_format($course);
     $course = $format->get_course();
     $options = $format->get_format_options();
-    if (!empty(($options['addnavigation']))) {
+    if (!empty(($options['addnavigation'] ?? get_config('format_popups', 'addnavigation')))) {
         $PAGE->set_pagelayout('frametop');
         $content .= $OUTPUT->activity_navigation();
     }
@@ -221,13 +221,18 @@ function format_popups_output_fragment_page($args) {
     $course = $format->get_course();
 
     $renderer = $PAGE->get_renderer('format_' . $format->get_format());
+    $contents = '';
     if (!empty($displaysection)) {
         $format->set_sectionid($displaysection);
+        $modinfo = get_fast_modinfo($course);
+        $sectioninfo = $modinfo->get_section_info_by_id($displaysection);
+        $widget = new \core\output\context_header($format->get_section_name($sectioninfo));
+        $contents .= $renderer->render($widget);
     }
     $outputclass = $format->get_output_classname('content');
     $widget = new $outputclass($format);
 
-    $contents = $renderer->render($widget);
+    $contents .= $renderer->render($widget);
 
     // Trigger course viewed event.
     course_section_view($context, $displaysection);
