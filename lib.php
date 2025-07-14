@@ -179,13 +179,19 @@ function format_popups_output_fragment_mod($args) {
 
     // Render the activity information.
     if (
-        class_exists('\\core_completion\\activity_custom_completion')
-        && $course->showcompletionconditions != COMPLETION_SHOW_CONDITIONS
+        $course->showcompletionconditions != COMPLETION_SHOW_CONDITIONS
     ) {
         $cminfo = cm_info::create($cm);
         $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
-        $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
-        $content = $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates) . $content;
+        if (class_exists('\\core_course\\output\\activity_completion')) {
+            $activitycompletion = new \core_course\output\activity_completion($cminfo, $completiondetails);
+            $data = $activitycompletion->export_for_template($OUTPUT);
+            $activityinfo = $OUTPUT->render_from_template('core_course/activity_info', $data);
+            $content = $activityinfo . $content;
+        } else if (class_exists('\\core_completion\\activity_custom_completion')) {
+            $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
+            $content = $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates) . $content;
+        }
     }
     $format = course_get_format($course);
     $course = $format->get_course();
