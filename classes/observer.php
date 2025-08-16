@@ -86,7 +86,7 @@ class observer {
         }
 
         try {
-            $socket = new self($context);
+            $socket = new socket($context);
             $socket->validate();
             $socket->dispatch();
         } catch (moodle_exception $e) {
