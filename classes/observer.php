@@ -25,9 +25,11 @@
 namespace format_popups;
 
 use context;
+use context_course;
 use moodle_exception;
 use stdClass;
 use format_popups\socket;
+use core_courseformat\hook\after_course_content_updated;
 
 /**
  * Web socket manager
@@ -60,6 +62,31 @@ class observer {
 
         try {
             $socket = new socket($context);
+            $socket->validate();
+            $socket->dispatch();
+        } catch (moodle_exception $e) {
+            return;
+        }
+    }
+
+    /**
+     * Handle hook to update content
+     *
+     * @param after_course_content_updated $hook Hook
+     */
+    public static function after_course_content_updated(after_course_content_updated $hook) {
+        global $USER;
+
+        if (
+            !get_config('format_popups', 'enabledeftresponse')
+            || !class_exists('\\block_deft\\socket')
+            || !$context = context_course::instance($hook->course->id)
+        ) {
+            return;
+        }
+
+        try {
+            $socket = new self($context);
             $socket->validate();
             $socket->dispatch();
         } catch (moodle_exception $e) {

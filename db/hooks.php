@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - https://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,24 +12,21 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Hook callbacks for Popup activities format
  *
- * @package     format_popups
- * @copyright   2021 Daniel Thies <dethies@gmail.com>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    format_popups
+ * @copyright  2025 Daniel Thies
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'format_popups';
-$plugin->release = '1.0.22';
-$plugin->version = 2024041506;
-$plugin->requires = 2024041600;
-$plugin->supports = [404, 500];
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = [
-    'format_topics' => 2021052500,
+$callbacks = [
+    [
+        'hook' => core_courseformat\hook\after_course_content_updated::class,
+        'callback' => 'format_popups\\observer::after_course_content_updated',
+    ],
 ];
