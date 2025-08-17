@@ -49,7 +49,10 @@ class content extends \format_topics\output\courseformat\content {
         $context = context_course::instance($course->id);
         $displaysection = $this->format->get_sectionid();
 
-        if (get_config('format_popups', 'enabledeftresponse')) {
+        if (
+            get_config('format_popups', 'enabledeftresponse')
+            && get_config('block_deft', 'enableupdating') == 1
+        ) {
             $socket = new socket($context);
             $token = $socket->get_token();
             $PAGE->requires->js_call_amd('format_popups/deft', 'init', [
