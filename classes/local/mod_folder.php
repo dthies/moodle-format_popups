@@ -48,7 +48,7 @@ class mod_folder extends mod_page {
      * @return string page contents
      */
     public function render() {
-        global $DB, $PAGE;
+        global $DB, $OUTPUT, $PAGE;
 
         $folder = $DB->get_record('folder', ['id' => $this->cm->instance], '*', MUST_EXIST);
         $course = $this->course;
@@ -71,6 +71,12 @@ class mod_folder extends mod_page {
         $output = $PAGE->get_renderer('mod_folder');
         $PAGE->requires->js_call_amd('format_popups/folder', 'init', [$this->context->id, $this->cm->id]);
 
-        return $output->display_folder($folder);
+        $content = $output->display_folder($folder);
+
+        if ($folder->intro) {
+            return $OUTPUT->box(format_module_intro('folder', $folder, $this->cm->id), 'generalbox', 'intro')
+               . $content;
+        }
+        return $content;
     }
 }

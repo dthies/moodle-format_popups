@@ -66,14 +66,13 @@ export const init = (id) => {
  */
 export const loadChapter = (e) => {
     'use strict';
-    let anchor = e.target.closest('a.bookprev, a.booknext, .book_toc a');
+    const anchor = e.target.closest('a.bookprev, a.booknext, .book_toc a');
 
     if (e.target.closest('a.bookexit')) {
         e.preventDefault();
     }
     if (anchor) {
-        let chapterid = anchor.getAttribute('data-chapterid') ||
-            (new URLSearchParams(anchor.getAttribute('href'))).get('chapterid'),
+        const chapterid = anchor.getAttribute('data-chapterid'),
             params = new URLSearchParams({
                 chapterid: chapterid
             });
