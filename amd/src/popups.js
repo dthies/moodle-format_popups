@@ -59,6 +59,8 @@ const createModal = async(contextid, courseid, displaysection) => {
         modal.contextid = contextid;
         modal.courseid = courseid;
         modal.displaysection = displaysection;
+        // The section the page was loaded with, its name is the page heading.
+        modal.pagesection = displaysection;
         modal.modules = [];
         modal.modulecount = document.querySelectorAll('.activity').length;
         root = modal;
@@ -97,7 +99,9 @@ export const updatePage = function() {
         'page',
         root.contextid,
         {
-            displaysection: root.displaysection
+            displaysection: root.displaysection,
+            // Only a section shown in place of another one needs a heading of its own.
+            heading: root.displaysection != root.pagesection ? 1 : 0
         }
     ).then(function(html, js) {
         document.body.classList.remove('popups_update');
