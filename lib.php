@@ -187,6 +187,16 @@ function format_popups_output_fragment_mod($args) {
             $activitycompletion = new \core_course\output\activity_completion($cminfo, $completiondetails);
             $data = $activitycompletion->export_for_template($OUTPUT);
             $activityinfo = $OUTPUT->render_from_template('core_course/activity_info', $data);
+            // Since Moodle 5.2 the activity information has no manual completion button.
+            if (
+                $data->showmanualcompletion && $data->istrackeduser && $data->uservisible
+                && strpos($activityinfo, 'toggle-manual-completion') === false
+            ) {
+                $activityinfo .= html_writer::div(
+                    $OUTPUT->render_from_template('core_course/completion_manual', $data),
+                    'format-popups-manual-completion mb-3'
+                );
+            }
             $content = $activityinfo . $content;
         } else if (class_exists('\\core_completion\\activity_custom_completion')) {
             $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
