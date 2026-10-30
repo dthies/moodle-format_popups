@@ -230,10 +230,14 @@ function format_popups_output_fragment_page($args) {
     $contents = '';
     if (!empty($displaysection)) {
         $format->set_sectionid($displaysection);
-        $modinfo = get_fast_modinfo($course);
-        $sectioninfo = $modinfo->get_section_info_by_id($displaysection);
-        $widget = new \core\output\context_header($format->get_section_name($sectioninfo));
-        $contents .= $renderer->render($widget);
+        // The section page has the section name as its page heading already. A section shown in place of
+        // another one, on the course page or on the page of another section, needs a heading of its own.
+        if (!empty($args['heading'])) {
+            $modinfo = get_fast_modinfo($course);
+            $sectioninfo = $modinfo->get_section_info_by_id($displaysection);
+            $widget = new \core\output\context_header($format->get_section_name($sectioninfo));
+            $contents .= $renderer->render($widget);
+        }
     }
     $outputclass = $format->get_output_classname('content');
     $widget = new $outputclass($format);
